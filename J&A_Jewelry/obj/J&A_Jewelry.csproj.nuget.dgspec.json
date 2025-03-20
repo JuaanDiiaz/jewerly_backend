@@ -1,37 +1,37 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Juan\\source\\repos\\J&A_Jewelry\\J&A_Jewelry\\J&A_Jewelry.csproj": {}
+    "C:\\Users\\minij\\Source\\Repos\\jewerly_backend\\J&A_Jewelry\\J&A_Jewelry.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Juan\\source\\repos\\J&A_Jewelry\\J&A_Jewelry\\J&A_Jewelry.csproj": {
+    "C:\\Users\\minij\\Source\\Repos\\jewerly_backend\\J&A_Jewelry\\J&A_Jewelry.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Juan\\source\\repos\\J&A_Jewelry\\J&A_Jewelry\\J&A_Jewelry.csproj",
+        "projectUniqueName": "C:\\Users\\minij\\Source\\Repos\\jewerly_backend\\J&A_Jewelry\\J&A_Jewelry.csproj",
         "projectName": "J&A_Jewelry",
-        "projectPath": "C:\\Users\\Juan\\source\\repos\\J&A_Jewelry\\J&A_Jewelry\\J&A_Jewelry.csproj",
-        "packagesPath": "C:\\Users\\Juan\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Juan\\source\\repos\\J&A_Jewelry\\J&A_Jewelry\\obj\\",
+        "projectPath": "C:\\Users\\minij\\Source\\Repos\\jewerly_backend\\J&A_Jewelry\\J&A_Jewelry.csproj",
+        "packagesPath": "C:\\Users\\minij\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\minij\\Source\\Repos\\jewerly_backend\\J&A_Jewelry\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
-          "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\"
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Juan\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\minij\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "net7.0"
+          "net8.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "net7.0": {
-            "targetAlias": "net7.0",
+          "net8.0": {
+            "targetAlias": "net8.0",
             "projectReferences": {}
           }
         },
@@ -44,30 +44,33 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        },
-        "SdkAnalysisLevel": "9.0.100"
+        }
       },
       "frameworks": {
-        "net7.0": {
-          "targetAlias": "net7.0",
+        "net8.0": {
+          "targetAlias": "net8.0",
           "dependencies": {
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
-              "version": "[7.0.11, )"
+              "version": "[9.0.3, )"
             },
             "Microsoft.EntityFrameworkCore.Tools": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
               "target": "Package",
-              "version": "[7.0.11, )"
+              "version": "[9.0.3, )"
+            },
+            "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
+              "target": "Package",
+              "version": "[9.0.0, )"
             },
             "MySql.EntityFrameworkCore": {
               "target": "Package",
-              "version": "[7.0.0, )"
+              "version": "[9.0.0, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
-              "version": "[6.4.0, )"
+              "version": "[8.0.0, )"
             }
           },
           "imports": [
@@ -89,7 +92,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.102\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

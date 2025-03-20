@@ -3,9 +3,6 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Get connection string from appsettings.json
-var connectionString = builder.Configuration.GetConnectionString("MYSQLConn");
-
 // Add services to the container.
 builder.Services.AddRazorPages();
 
@@ -20,7 +17,7 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 
 // Add database context
 builder.Services.AddDbContext<IsetechcJewelryInventoryContext>(options =>
-    options.UseMySQL(connectionString));
+    options.UseMySQL(builder.Configuration.GetConnectionString("myDBConn")));
 
 // Add CORS policy
 builder.Services.AddCors(options =>
