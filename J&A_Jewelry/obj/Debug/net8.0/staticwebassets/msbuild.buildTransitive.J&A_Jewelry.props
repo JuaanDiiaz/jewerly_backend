@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\buildMultiTargeting\J&amp;A_Jewelry.props" />
+</Project>
