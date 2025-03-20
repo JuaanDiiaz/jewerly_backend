@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\J&amp;A_Jewelry.props" />
+</Project>
