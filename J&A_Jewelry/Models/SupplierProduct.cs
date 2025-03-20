@@ -18,8 +18,4 @@ public partial class SupplierProduct
     public string? Description { get; set; }
 
     public decimal? Price { get; set; }
-
-    public virtual Product? Product { get; set; }
-
-    public virtual Supplier? Supplier { get; set; }
 }

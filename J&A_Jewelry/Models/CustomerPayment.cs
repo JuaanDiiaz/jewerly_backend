@@ -20,8 +20,4 @@ public partial class CustomerPayment
     public string? Notes { get; set; }
 
     public virtual Customer? Customer { get; set; }
-
-    public virtual PaymentMethod? PaymentMethod { get; set; }
-
-    public virtual SalesOrderHeader? SalesOrder { get; set; }
 }

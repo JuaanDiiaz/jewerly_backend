@@ -354,3 +354,4 @@ C:\Users\minij\Source\Repos\jewerly_backend\J&A_Jewelry\obj\Debug\net9.0\refint\
 C:\Users\minij\Source\Repos\jewerly_backend\J&A_Jewelry\obj\Debug\net9.0\J&A_Jewelry.pdb
 C:\Users\minij\Source\Repos\jewerly_backend\J&A_Jewelry\obj\Debug\net9.0\J&A_Jewelry.genruntimeconfig.cache
 C:\Users\minij\Source\Repos\jewerly_backend\J&A_Jewelry\obj\Debug\net9.0\ref\J&A_Jewelry.dll
+C:\Users\minij\Source\Repos\jewerly_backend\J&A_Jewelry\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt

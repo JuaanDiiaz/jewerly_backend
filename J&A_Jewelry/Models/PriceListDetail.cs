@@ -16,8 +16,4 @@ public partial class PriceListDetail
     public DateTime? ValidFrom { get; set; }
 
     public DateTime? ValidTo { get; set; }
-
-    public virtual PriceList? PriceList { get; set; }
-
-    public virtual Product? Product { get; set; }
 }

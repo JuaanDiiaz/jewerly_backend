@@ -14,8 +14,4 @@ public partial class Inventory
     public string? Location { get; set; }
 
     public decimal? Weight { get; set; }
-
-    public virtual Product? Product { get; set; }
-
-    public virtual Warehouse? Warehouse { get; set; }
 }

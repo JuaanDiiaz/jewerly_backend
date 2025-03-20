@@ -16,8 +16,4 @@ public partial class SalesOrderDetail
     public decimal? UnitPrice { get; set; }
 
     public decimal? Total { get; set; }
-
-    public virtual Product? Product { get; set; }
-
-    public virtual SalesOrderHeader? SalesOrder { get; set; }
 }

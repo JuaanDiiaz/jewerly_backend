@@ -12,8 +12,4 @@ public partial class Supplier
     public string? ClientNumber { get; set; }
 
     public string? ShipVia { get; set; }
-
-    public virtual ICollection<PurchaseOrderHeader> PurchaseOrderHeaders { get; set; } = new List<PurchaseOrderHeader>();
-
-    public virtual ICollection<SupplierProduct> SupplierProducts { get; set; } = new List<SupplierProduct>();
 }

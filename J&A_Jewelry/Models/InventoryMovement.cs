@@ -24,12 +24,4 @@ public partial class InventoryMovement
     public string? ManualEntryReason { get; set; }
 
     public string? Notes { get; set; }
-
-    public virtual Product? Product { get; set; }
-
-    public virtual PurchaseOrderHeader? PurchaseOrder { get; set; }
-
-    public virtual SalesOrderHeader? SalesOrder { get; set; }
-
-    public virtual Warehouse? Warehouse { get; set; }
 }

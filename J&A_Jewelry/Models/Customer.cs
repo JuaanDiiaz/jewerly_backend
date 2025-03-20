@@ -20,8 +20,4 @@ public partial class Customer
     public string? PostalCode { get; set; }
 
     public string? Country { get; set; }
-
-    public virtual ICollection<CustomerPayment> CustomerPayments { get; set; } = new List<CustomerPayment>();
-
-    public virtual ICollection<SalesOrderHeader> SalesOrderHeaders { get; set; } = new List<SalesOrderHeader>();
 }

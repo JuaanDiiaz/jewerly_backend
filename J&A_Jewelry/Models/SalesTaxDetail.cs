@@ -12,6 +12,4 @@ public partial class SalesTaxDetail
     public string? TaxType { get; set; }
 
     public decimal? TaxAmount { get; set; }
-
-    public virtual SalesOrderHeader? SalesOrder { get; set; }
 }

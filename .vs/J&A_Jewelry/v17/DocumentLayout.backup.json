@@ -3,12 +3,95 @@
   "WorkspaceRootPath": "C:\\Users\\minij\\source\\repos\\jewerly_backend\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{1DA8496D-FD88-412A-92DA-83DA9066E60F}|J\u0026A_Jewelry\\J\u0026A_Jewelry.csproj|c:\\users\\minij\\source\\repos\\jewerly_backend\\j\u0026a_jewelry\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1DA8496D-FD88-412A-92DA-83DA9066E60F}|J\u0026A_Jewelry\\J\u0026A_Jewelry.csproj|solutionrelative:j\u0026a_jewelry\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{1DA8496D-FD88-412A-92DA-83DA9066E60F}|J\u0026A_Jewelry\\J\u0026A_Jewelry.csproj|c:\\users\\minij\\source\\repos\\jewerly_backend\\j\u0026a_jewelry\\models\\isetechcjewelryinventorycontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1DA8496D-FD88-412A-92DA-83DA9066E60F}|J\u0026A_Jewelry\\J\u0026A_Jewelry.csproj|solutionrelative:j\u0026a_jewelry\\models\\isetechcjewelryinventorycontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1DA8496D-FD88-412A-92DA-83DA9066E60F}|J\u0026A_Jewelry\\J\u0026A_Jewelry.csproj|c:\\users\\minij\\source\\repos\\jewerly_backend\\j\u0026a_jewelry\\models\\warehouse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1DA8496D-FD88-412A-92DA-83DA9066E60F}|J\u0026A_Jewelry\\J\u0026A_Jewelry.csproj|solutionrelative:j\u0026a_jewelry\\models\\warehouse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1DA8496D-FD88-412A-92DA-83DA9066E60F}|J\u0026A_Jewelry\\J\u0026A_Jewelry.csproj|c:\\users\\minij\\source\\repos\\jewerly_backend\\j\u0026a_jewelry\\models\\supplierproduct.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1DA8496D-FD88-412A-92DA-83DA9066E60F}|J\u0026A_Jewelry\\J\u0026A_Jewelry.csproj|solutionrelative:j\u0026a_jewelry\\models\\supplierproduct.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1DA8496D-FD88-412A-92DA-83DA9066E60F}|J\u0026A_Jewelry\\J\u0026A_Jewelry.csproj|c:\\users\\minij\\source\\repos\\jewerly_backend\\j\u0026a_jewelry\\models\\supplier.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1DA8496D-FD88-412A-92DA-83DA9066E60F}|J\u0026A_Jewelry\\J\u0026A_Jewelry.csproj|solutionrelative:j\u0026a_jewelry\\models\\supplier.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1DA8496D-FD88-412A-92DA-83DA9066E60F}|J\u0026A_Jewelry\\J\u0026A_Jewelry.csproj|c:\\users\\minij\\source\\repos\\jewerly_backend\\j\u0026a_jewelry\\models\\salestaxdetail.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1DA8496D-FD88-412A-92DA-83DA9066E60F}|J\u0026A_Jewelry\\J\u0026A_Jewelry.csproj|solutionrelative:j\u0026a_jewelry\\models\\salestaxdetail.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1DA8496D-FD88-412A-92DA-83DA9066E60F}|J\u0026A_Jewelry\\J\u0026A_Jewelry.csproj|c:\\users\\minij\\source\\repos\\jewerly_backend\\j\u0026a_jewelry\\models\\salesorderheader.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1DA8496D-FD88-412A-92DA-83DA9066E60F}|J\u0026A_Jewelry\\J\u0026A_Jewelry.csproj|solutionrelative:j\u0026a_jewelry\\models\\salesorderheader.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1DA8496D-FD88-412A-92DA-83DA9066E60F}|J\u0026A_Jewelry\\J\u0026A_Jewelry.csproj|c:\\users\\minij\\source\\repos\\jewerly_backend\\j\u0026a_jewelry\\models\\salesorderdetail.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1DA8496D-FD88-412A-92DA-83DA9066E60F}|J\u0026A_Jewelry\\J\u0026A_Jewelry.csproj|solutionrelative:j\u0026a_jewelry\\models\\salesorderdetail.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1DA8496D-FD88-412A-92DA-83DA9066E60F}|J\u0026A_Jewelry\\J\u0026A_Jewelry.csproj|c:\\users\\minij\\source\\repos\\jewerly_backend\\j\u0026a_jewelry\\models\\purchaseorderheader.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1DA8496D-FD88-412A-92DA-83DA9066E60F}|J\u0026A_Jewelry\\J\u0026A_Jewelry.csproj|solutionrelative:j\u0026a_jewelry\\models\\purchaseorderheader.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1DA8496D-FD88-412A-92DA-83DA9066E60F}|J\u0026A_Jewelry\\J\u0026A_Jewelry.csproj|c:\\users\\minij\\source\\repos\\jewerly_backend\\j\u0026a_jewelry\\models\\purchaseorderdetail.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1DA8496D-FD88-412A-92DA-83DA9066E60F}|J\u0026A_Jewelry\\J\u0026A_Jewelry.csproj|solutionrelative:j\u0026a_jewelry\\models\\purchaseorderdetail.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1DA8496D-FD88-412A-92DA-83DA9066E60F}|J\u0026A_Jewelry\\J\u0026A_Jewelry.csproj|c:\\users\\minij\\source\\repos\\jewerly_backend\\j\u0026a_jewelry\\models\\productimage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1DA8496D-FD88-412A-92DA-83DA9066E60F}|J\u0026A_Jewelry\\J\u0026A_Jewelry.csproj|solutionrelative:j\u0026a_jewelry\\models\\productimage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1DA8496D-FD88-412A-92DA-83DA9066E60F}|J\u0026A_Jewelry\\J\u0026A_Jewelry.csproj|c:\\users\\minij\\source\\repos\\jewerly_backend\\j\u0026a_jewelry\\models\\productcategory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1DA8496D-FD88-412A-92DA-83DA9066E60F}|J\u0026A_Jewelry\\J\u0026A_Jewelry.csproj|solutionrelative:j\u0026a_jewelry\\models\\productcategory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1DA8496D-FD88-412A-92DA-83DA9066E60F}|J\u0026A_Jewelry\\J\u0026A_Jewelry.csproj|c:\\users\\minij\\source\\repos\\jewerly_backend\\j\u0026a_jewelry\\models\\product.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1DA8496D-FD88-412A-92DA-83DA9066E60F}|J\u0026A_Jewelry\\J\u0026A_Jewelry.csproj|solutionrelative:j\u0026a_jewelry\\models\\product.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1DA8496D-FD88-412A-92DA-83DA9066E60F}|J\u0026A_Jewelry\\J\u0026A_Jewelry.csproj|c:\\users\\minij\\source\\repos\\jewerly_backend\\j\u0026a_jewelry\\models\\pricelistdetail.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1DA8496D-FD88-412A-92DA-83DA9066E60F}|J\u0026A_Jewelry\\J\u0026A_Jewelry.csproj|solutionrelative:j\u0026a_jewelry\\models\\pricelistdetail.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1DA8496D-FD88-412A-92DA-83DA9066E60F}|J\u0026A_Jewelry\\J\u0026A_Jewelry.csproj|c:\\users\\minij\\source\\repos\\jewerly_backend\\j\u0026a_jewelry\\models\\pricelist.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1DA8496D-FD88-412A-92DA-83DA9066E60F}|J\u0026A_Jewelry\\J\u0026A_Jewelry.csproj|solutionrelative:j\u0026a_jewelry\\models\\pricelist.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1DA8496D-FD88-412A-92DA-83DA9066E60F}|J\u0026A_Jewelry\\J\u0026A_Jewelry.csproj|c:\\users\\minij\\source\\repos\\jewerly_backend\\j\u0026a_jewelry\\models\\paymentmethod.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1DA8496D-FD88-412A-92DA-83DA9066E60F}|J\u0026A_Jewelry\\J\u0026A_Jewelry.csproj|solutionrelative:j\u0026a_jewelry\\models\\paymentmethod.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1DA8496D-FD88-412A-92DA-83DA9066E60F}|J\u0026A_Jewelry\\J\u0026A_Jewelry.csproj|c:\\users\\minij\\source\\repos\\jewerly_backend\\j\u0026a_jewelry\\models\\inventorymovement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1DA8496D-FD88-412A-92DA-83DA9066E60F}|J\u0026A_Jewelry\\J\u0026A_Jewelry.csproj|solutionrelative:j\u0026a_jewelry\\models\\inventorymovement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1DA8496D-FD88-412A-92DA-83DA9066E60F}|J\u0026A_Jewelry\\J\u0026A_Jewelry.csproj|c:\\users\\minij\\source\\repos\\jewerly_backend\\j\u0026a_jewelry\\models\\inventory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1DA8496D-FD88-412A-92DA-83DA9066E60F}|J\u0026A_Jewelry\\J\u0026A_Jewelry.csproj|solutionrelative:j\u0026a_jewelry\\models\\inventory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1DA8496D-FD88-412A-92DA-83DA9066E60F}|J\u0026A_Jewelry\\J\u0026A_Jewelry.csproj|c:\\users\\minij\\source\\repos\\jewerly_backend\\j\u0026a_jewelry\\models\\customerpayment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1DA8496D-FD88-412A-92DA-83DA9066E60F}|J\u0026A_Jewelry\\J\u0026A_Jewelry.csproj|solutionrelative:j\u0026a_jewelry\\models\\customerpayment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1DA8496D-FD88-412A-92DA-83DA9066E60F}|J\u0026A_Jewelry\\J\u0026A_Jewelry.csproj|c:\\users\\minij\\source\\repos\\jewerly_backend\\j\u0026a_jewelry\\models\\customer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1DA8496D-FD88-412A-92DA-83DA9066E60F}|J\u0026A_Jewelry\\J\u0026A_Jewelry.csproj|solutionrelative:j\u0026a_jewelry\\models\\customer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1DA8496D-FD88-412A-92DA-83DA9066E60F}|J\u0026A_Jewelry\\J\u0026A_Jewelry.csproj|c:\\users\\minij\\source\\repos\\jewerly_backend\\j\u0026a_jewelry\\models\\category.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1DA8496D-FD88-412A-92DA-83DA9066E60F}|J\u0026A_Jewelry\\J\u0026A_Jewelry.csproj|solutionrelative:j\u0026a_jewelry\\models\\category.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1DA8496D-FD88-412A-92DA-83DA9066E60F}|J\u0026A_Jewelry\\J\u0026A_Jewelry.csproj|c:\\users\\minij\\source\\repos\\jewerly_backend\\j\u0026a_jewelry\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{1DA8496D-FD88-412A-92DA-83DA9066E60F}|J\u0026A_Jewelry\\J\u0026A_Jewelry.csproj|solutionrelative:j\u0026a_jewelry\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1DA8496D-FD88-412A-92DA-83DA9066E60F}|J\u0026A_Jewelry\\J\u0026A_Jewelry.csproj|c:\\users\\minij\\source\\repos\\jewerly_backend\\j\u0026a_jewelry\\j\u0026a_jewelry.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{1DA8496D-FD88-412A-92DA-83DA9066E60F}|J\u0026A_Jewelry\\J\u0026A_Jewelry.csproj|solutionrelative:j\u0026a_jewelry\\j\u0026a_jewelry.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Program Files\\dotnet\\sdk\\9.0.201\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.Sdk.DefaultItems.Shared.targets||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     }
   ],
   "DocumentGroupContainers": [
@@ -18,32 +101,305 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 8,
           "Children": [
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "IsetechcJewelryInventoryContext.cs",
-              "DocumentMoniker": "C:\\Users\\minij\\source\\repos\\jewerly_backend\\J\u0026A_Jewelry\\Models\\IsetechcJewelryInventoryContext.cs",
-              "RelativeDocumentMoniker": "J\u0026A_Jewelry\\Models\\IsetechcJewelryInventoryContext.cs",
-              "ToolTip": "C:\\Users\\minij\\source\\repos\\jewerly_backend\\J\u0026A_Jewelry\\Models\\IsetechcJewelryInventoryContext.cs",
-              "RelativeToolTip": "J\u0026A_Jewelry\\Models\\IsetechcJewelryInventoryContext.cs",
-              "ViewState": "AgIAACwAAAAAAAAAAAAIwEIAAAApAAAAAAAAAA==",
+              "Title": "Warehouse.cs",
+              "DocumentMoniker": "C:\\Users\\minij\\source\\repos\\jewerly_backend\\J\u0026A_Jewelry\\Models\\Warehouse.cs",
+              "RelativeDocumentMoniker": "J\u0026A_Jewelry\\Models\\Warehouse.cs",
+              "ToolTip": "C:\\Users\\minij\\source\\repos\\jewerly_backend\\J\u0026A_Jewelry\\Models\\Warehouse.cs",
+              "RelativeToolTip": "J\u0026A_Jewelry\\Models\\Warehouse.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAlAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-28T04:44:08.27Z",
+              "WhenOpened": "2025-03-20T20:09:03.153Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "SupplierProduct.cs",
+              "DocumentMoniker": "C:\\Users\\minij\\source\\repos\\jewerly_backend\\J\u0026A_Jewelry\\Models\\SupplierProduct.cs",
+              "RelativeDocumentMoniker": "J\u0026A_Jewelry\\Models\\SupplierProduct.cs",
+              "ToolTip": "C:\\Users\\minij\\source\\repos\\jewerly_backend\\J\u0026A_Jewelry\\Models\\SupplierProduct.cs",
+              "RelativeToolTip": "J\u0026A_Jewelry\\Models\\SupplierProduct.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAnAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-20T20:08:56.677Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Supplier.cs",
+              "DocumentMoniker": "C:\\Users\\minij\\source\\repos\\jewerly_backend\\J\u0026A_Jewelry\\Models\\Supplier.cs",
+              "RelativeDocumentMoniker": "J\u0026A_Jewelry\\Models\\Supplier.cs",
+              "ToolTip": "C:\\Users\\minij\\source\\repos\\jewerly_backend\\J\u0026A_Jewelry\\Models\\Supplier.cs",
+              "RelativeToolTip": "J\u0026A_Jewelry\\Models\\Supplier.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAoAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-20T20:08:50.62Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "SalesTaxDetail.cs",
+              "DocumentMoniker": "C:\\Users\\minij\\source\\repos\\jewerly_backend\\J\u0026A_Jewelry\\Models\\SalesTaxDetail.cs",
+              "RelativeDocumentMoniker": "J\u0026A_Jewelry\\Models\\SalesTaxDetail.cs",
+              "ToolTip": "C:\\Users\\minij\\source\\repos\\jewerly_backend\\J\u0026A_Jewelry\\Models\\SalesTaxDetail.cs",
+              "RelativeToolTip": "J\u0026A_Jewelry\\Models\\SalesTaxDetail.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-20T20:08:44.655Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "SalesOrderHeader.cs",
+              "DocumentMoniker": "C:\\Users\\minij\\source\\repos\\jewerly_backend\\J\u0026A_Jewelry\\Models\\SalesOrderHeader.cs",
+              "RelativeDocumentMoniker": "J\u0026A_Jewelry\\Models\\SalesOrderHeader.cs",
+              "ToolTip": "C:\\Users\\minij\\source\\repos\\jewerly_backend\\J\u0026A_Jewelry\\Models\\SalesOrderHeader.cs",
+              "RelativeToolTip": "J\u0026A_Jewelry\\Models\\SalesOrderHeader.cs",
+              "ViewState": "AgIAAAcAAAAAAAAAAAA1wBEAAAAmAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-20T20:08:35.259Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "SalesOrderDetail.cs",
+              "DocumentMoniker": "C:\\Users\\minij\\source\\repos\\jewerly_backend\\J\u0026A_Jewelry\\Models\\SalesOrderDetail.cs",
+              "RelativeDocumentMoniker": "J\u0026A_Jewelry\\Models\\SalesOrderDetail.cs",
+              "ToolTip": "C:\\Users\\minij\\source\\repos\\jewerly_backend\\J\u0026A_Jewelry\\Models\\SalesOrderDetail.cs",
+              "RelativeToolTip": "J\u0026A_Jewelry\\Models\\SalesOrderDetail.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAnAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-20T20:08:28.91Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "PurchaseOrderHeader.cs",
+              "DocumentMoniker": "C:\\Users\\minij\\source\\repos\\jewerly_backend\\J\u0026A_Jewelry\\Models\\PurchaseOrderHeader.cs",
+              "RelativeDocumentMoniker": "J\u0026A_Jewelry\\Models\\PurchaseOrderHeader.cs",
+              "ToolTip": "C:\\Users\\minij\\source\\repos\\jewerly_backend\\J\u0026A_Jewelry\\Models\\PurchaseOrderHeader.cs",
+              "RelativeToolTip": "J\u0026A_Jewelry\\Models\\PurchaseOrderHeader.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAmAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-20T20:08:21.182Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "PurchaseOrderDetail.cs",
+              "DocumentMoniker": "C:\\Users\\minij\\source\\repos\\jewerly_backend\\J\u0026A_Jewelry\\Models\\PurchaseOrderDetail.cs",
+              "RelativeDocumentMoniker": "J\u0026A_Jewelry\\Models\\PurchaseOrderDetail.cs",
+              "ToolTip": "C:\\Users\\minij\\source\\repos\\jewerly_backend\\J\u0026A_Jewelry\\Models\\PurchaseOrderDetail.cs",
+              "RelativeToolTip": "J\u0026A_Jewelry\\Models\\PurchaseOrderDetail.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAnAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-20T20:08:13.259Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\minij\\source\\repos\\jewerly_backend\\J\u0026A_Jewelry\\Program.cs",
-              "RelativeDocumentMoniker": "J\u0026A_Jewelry\\Program.cs",
-              "ToolTip": "C:\\Users\\minij\\source\\repos\\jewerly_backend\\J\u0026A_Jewelry\\Program.cs",
-              "RelativeToolTip": "J\u0026A_Jewelry\\Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAADwvyAAAAAAAAAAAAAAAA==",
+              "Title": "IsetechcJewelryInventoryContext.cs",
+              "DocumentMoniker": "C:\\Users\\minij\\source\\repos\\jewerly_backend\\J\u0026A_Jewelry\\Models\\IsetechcJewelryInventoryContext.cs",
+              "RelativeDocumentMoniker": "J\u0026A_Jewelry\\Models\\IsetechcJewelryInventoryContext.cs",
+              "ToolTip": "C:\\Users\\minij\\source\\repos\\jewerly_backend\\J\u0026A_Jewelry\\Models\\IsetechcJewelryInventoryContext.cs*",
+              "RelativeToolTip": "J\u0026A_Jewelry\\Models\\IsetechcJewelryInventoryContext.cs*",
+              "ViewState": "AgIAAP0BAAAAAAAAAAAnwP4BAAAtAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-28T04:55:06.618Z",
+              "WhenOpened": "2025-03-20T17:58:52.649Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "ProductImage.cs",
+              "DocumentMoniker": "C:\\Users\\minij\\source\\repos\\jewerly_backend\\J\u0026A_Jewelry\\Models\\ProductImage.cs",
+              "RelativeDocumentMoniker": "J\u0026A_Jewelry\\Models\\ProductImage.cs",
+              "ToolTip": "C:\\Users\\minij\\source\\repos\\jewerly_backend\\J\u0026A_Jewelry\\Models\\ProductImage.cs",
+              "RelativeToolTip": "J\u0026A_Jewelry\\Models\\ProductImage.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAsAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-20T20:08:07.085Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "ProductCategory.cs",
+              "DocumentMoniker": "C:\\Users\\minij\\source\\repos\\jewerly_backend\\J\u0026A_Jewelry\\Models\\ProductCategory.cs",
+              "RelativeDocumentMoniker": "J\u0026A_Jewelry\\Models\\ProductCategory.cs",
+              "ToolTip": "C:\\Users\\minij\\source\\repos\\jewerly_backend\\J\u0026A_Jewelry\\Models\\ProductCategory.cs",
+              "RelativeToolTip": "J\u0026A_Jewelry\\Models\\ProductCategory.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAnAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-20T20:07:47.645Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "Product.cs",
+              "DocumentMoniker": "C:\\Users\\minij\\source\\repos\\jewerly_backend\\J\u0026A_Jewelry\\Models\\Product.cs",
+              "RelativeDocumentMoniker": "J\u0026A_Jewelry\\Models\\Product.cs",
+              "ToolTip": "C:\\Users\\minij\\source\\repos\\jewerly_backend\\J\u0026A_Jewelry\\Models\\Product.cs",
+              "RelativeToolTip": "J\u0026A_Jewelry\\Models\\Product.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAsAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-20T20:07:38.202Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "PriceListDetail.cs",
+              "DocumentMoniker": "C:\\Users\\minij\\source\\repos\\jewerly_backend\\J\u0026A_Jewelry\\Models\\PriceListDetail.cs",
+              "RelativeDocumentMoniker": "J\u0026A_Jewelry\\Models\\PriceListDetail.cs",
+              "ToolTip": "C:\\Users\\minij\\source\\repos\\jewerly_backend\\J\u0026A_Jewelry\\Models\\PriceListDetail.cs",
+              "RelativeToolTip": "J\u0026A_Jewelry\\Models\\PriceListDetail.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAqAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-20T20:07:31.975Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "PriceList.cs",
+              "DocumentMoniker": "C:\\Users\\minij\\source\\repos\\jewerly_backend\\J\u0026A_Jewelry\\Models\\PriceList.cs",
+              "RelativeDocumentMoniker": "J\u0026A_Jewelry\\Models\\PriceList.cs",
+              "ToolTip": "C:\\Users\\minij\\source\\repos\\jewerly_backend\\J\u0026A_Jewelry\\Models\\PriceList.cs",
+              "RelativeToolTip": "J\u0026A_Jewelry\\Models\\PriceList.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAlAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-20T20:07:26.757Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "PaymentMethod.cs",
+              "DocumentMoniker": "C:\\Users\\minij\\source\\repos\\jewerly_backend\\J\u0026A_Jewelry\\Models\\PaymentMethod.cs",
+              "RelativeDocumentMoniker": "J\u0026A_Jewelry\\Models\\PaymentMethod.cs",
+              "ToolTip": "C:\\Users\\minij\\source\\repos\\jewerly_backend\\J\u0026A_Jewelry\\Models\\PaymentMethod.cs",
+              "RelativeToolTip": "J\u0026A_Jewelry\\Models\\PaymentMethod.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAsAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-20T20:07:16.124Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "InventoryMovement.cs",
+              "DocumentMoniker": "C:\\Users\\minij\\source\\repos\\jewerly_backend\\J\u0026A_Jewelry\\Models\\InventoryMovement.cs",
+              "RelativeDocumentMoniker": "J\u0026A_Jewelry\\Models\\InventoryMovement.cs",
+              "ToolTip": "C:\\Users\\minij\\source\\repos\\jewerly_backend\\J\u0026A_Jewelry\\Models\\InventoryMovement.cs",
+              "RelativeToolTip": "J\u0026A_Jewelry\\Models\\InventoryMovement.cs",
+              "ViewState": "AgIAABAAAAAAAAAAAAAcwBkAAAAmAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-20T20:07:05.615Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "Inventory.cs",
+              "DocumentMoniker": "C:\\Users\\minij\\source\\repos\\jewerly_backend\\J\u0026A_Jewelry\\Models\\Inventory.cs",
+              "RelativeDocumentMoniker": "J\u0026A_Jewelry\\Models\\Inventory.cs",
+              "ToolTip": "C:\\Users\\minij\\source\\repos\\jewerly_backend\\J\u0026A_Jewelry\\Models\\Inventory.cs",
+              "RelativeToolTip": "J\u0026A_Jewelry\\Models\\Inventory.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAoAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-20T20:06:55.202Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "CustomerPayment.cs",
+              "DocumentMoniker": "C:\\Users\\minij\\source\\repos\\jewerly_backend\\J\u0026A_Jewelry\\Models\\CustomerPayment.cs",
+              "RelativeDocumentMoniker": "J\u0026A_Jewelry\\Models\\CustomerPayment.cs",
+              "ToolTip": "C:\\Users\\minij\\source\\repos\\jewerly_backend\\J\u0026A_Jewelry\\Models\\CustomerPayment.cs",
+              "RelativeToolTip": "J\u0026A_Jewelry\\Models\\CustomerPayment.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAzAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-20T20:06:45.369Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "Customer.cs",
+              "DocumentMoniker": "C:\\Users\\minij\\source\\repos\\jewerly_backend\\J\u0026A_Jewelry\\Models\\Customer.cs",
+              "RelativeDocumentMoniker": "J\u0026A_Jewelry\\Models\\Customer.cs",
+              "ToolTip": "C:\\Users\\minij\\source\\repos\\jewerly_backend\\J\u0026A_Jewelry\\Models\\Customer.cs",
+              "RelativeToolTip": "J\u0026A_Jewelry\\Models\\Customer.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAoAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-20T20:06:37.545Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "Category.cs",
+              "DocumentMoniker": "C:\\Users\\minij\\source\\repos\\jewerly_backend\\J\u0026A_Jewelry\\Models\\Category.cs",
+              "RelativeDocumentMoniker": "J\u0026A_Jewelry\\Models\\Category.cs",
+              "ToolTip": "C:\\Users\\minij\\source\\repos\\jewerly_backend\\J\u0026A_Jewelry\\Models\\Category.cs",
+              "RelativeToolTip": "J\u0026A_Jewelry\\Models\\Category.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAxAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-20T18:43:28.242Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\minij\\source\\repos\\jewerly_backend\\J\u0026A_Jewelry\\appsettings.json",
+              "RelativeDocumentMoniker": "J\u0026A_Jewelry\\appsettings.json",
+              "ToolTip": "C:\\Users\\minij\\source\\repos\\jewerly_backend\\J\u0026A_Jewelry\\appsettings.json",
+              "RelativeToolTip": "J\u0026A_Jewelry\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAB1AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-03-20T18:39:05.036Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "J\u0026A_Jewelry",
+              "DocumentMoniker": "C:\\Users\\minij\\Source\\Repos\\jewerly_backend\\J\u0026A_Jewelry\\J\u0026A_Jewelry.csproj",
+              "RelativeDocumentMoniker": "J\u0026A_Jewelry\\J\u0026A_Jewelry.csproj",
+              "ToolTip": "C:\\Users\\minij\\Source\\Repos\\jewerly_backend\\J\u0026A_Jewelry\\J\u0026A_Jewelry.csproj",
+              "RelativeToolTip": "J\u0026A_Jewelry\\J\u0026A_Jewelry.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-03-20T17:53:47.074Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "Microsoft.NET.Sdk.DefaultItems.Shared.targets",
+              "DocumentMoniker": "C:\\Program Files\\dotnet\\sdk\\9.0.201\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.Sdk.DefaultItems.Shared.targets",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\Program Files\\dotnet\\sdk\\9.0.201\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.Sdk.DefaultItems.Shared.targets",
+              "ToolTip": "C:\\Program Files\\dotnet\\sdk\\9.0.201\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.Sdk.DefaultItems.Shared.targets",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\Program Files\\dotnet\\sdk\\9.0.201\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.Sdk.DefaultItems.Shared.targets",
+              "ViewState": "AgIAAJ0AAAAAAAAAAADwv70AAAAEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003801|",
+              "WhenOpened": "2025-03-20T17:53:21.115Z",
               "EditorCaption": ""
             }
           ]

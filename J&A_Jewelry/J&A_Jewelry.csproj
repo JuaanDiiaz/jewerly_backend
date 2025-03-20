@@ -7,12 +7,13 @@
     <RootNamespace>J_A_Jewelry</RootNamespace>
   </PropertyGroup>
 
-  <ItemGroup>
+  <!--<ItemGroup>
     <Compile Remove="Controllers\**" />
     <Content Remove="Controllers\**" />
     <EmbeddedResource Remove="Controllers\**" />
     <None Remove="Controllers\**" />
-  </ItemGroup>
+  </ItemGroup>-->
+
 
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.3" />

@@ -53,9 +53,7 @@ public partial class IsetechcJewelryInventoryContext : DbContext
 
     public virtual DbSet<Warehouse> Warehouses { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseMySQL("Server=isetech.com.mx;Database=isetechc_jewelry_inventory;User=isetechc_jewerly;Password=jewerlyRoot;");
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -75,6 +73,9 @@ public partial class IsetechcJewelryInventoryContext : DbContext
             entity.Property(e => e.ExtraInformation)
                 .HasColumnType("text")
                 .HasColumnName("extraInformation");
+            entity.Property(e => e.IdParentCategory)
+                .HasColumnType("int(11)")
+                .HasColumnName("id_parentCategory");
         });
 
         modelBuilder.Entity<Customer>(entity =>
@@ -138,21 +139,6 @@ public partial class IsetechcJewelryInventoryContext : DbContext
             entity.Property(e => e.SalesOrderId)
                 .HasColumnType("int(11)")
                 .HasColumnName("salesOrderId");
-
-            entity.HasOne(d => d.Customer).WithMany(p => p.CustomerPayments)
-                .HasForeignKey(d => d.CustomerId)
-                .OnDelete(DeleteBehavior.Restrict)
-                .HasConstraintName("CustomerPayments_ibfk_1");
-
-            entity.HasOne(d => d.PaymentMethod).WithMany(p => p.CustomerPayments)
-                .HasForeignKey(d => d.PaymentMethodId)
-                .OnDelete(DeleteBehavior.Restrict)
-                .HasConstraintName("CustomerPayments_ibfk_3");
-
-            entity.HasOne(d => d.SalesOrder).WithMany(p => p.CustomerPayments)
-                .HasForeignKey(d => d.SalesOrderId)
-                .OnDelete(DeleteBehavior.Restrict)
-                .HasConstraintName("CustomerPayments_ibfk_2");
         });
 
         modelBuilder.Entity<Inventory>(entity =>
@@ -181,15 +167,6 @@ public partial class IsetechcJewelryInventoryContext : DbContext
                 .HasPrecision(10)
                 .HasColumnName("weight");
 
-            entity.HasOne(d => d.Product).WithMany(p => p.Inventories)
-                .HasForeignKey(d => d.ProductId)
-                .OnDelete(DeleteBehavior.Restrict)
-                .HasConstraintName("Inventory_ibfk_2");
-
-            entity.HasOne(d => d.Warehouse).WithMany(p => p.Inventories)
-                .HasForeignKey(d => d.WarehouseId)
-                .OnDelete(DeleteBehavior.Restrict)
-                .HasConstraintName("Inventory_ibfk_1");
         });
 
         modelBuilder.Entity<InventoryMovement>(entity =>
@@ -234,26 +211,6 @@ public partial class IsetechcJewelryInventoryContext : DbContext
             entity.Property(e => e.WarehouseId)
                 .HasColumnType("int(11)")
                 .HasColumnName("warehouseId");
-
-            entity.HasOne(d => d.Product).WithMany(p => p.InventoryMovements)
-                .HasForeignKey(d => d.ProductId)
-                .OnDelete(DeleteBehavior.Restrict)
-                .HasConstraintName("InventoryMovements_ibfk_1");
-
-            entity.HasOne(d => d.PurchaseOrder).WithMany(p => p.InventoryMovements)
-                .HasForeignKey(d => d.PurchaseOrderId)
-                .OnDelete(DeleteBehavior.Restrict)
-                .HasConstraintName("InventoryMovements_ibfk_3");
-
-            entity.HasOne(d => d.SalesOrder).WithMany(p => p.InventoryMovements)
-                .HasForeignKey(d => d.SalesOrderId)
-                .OnDelete(DeleteBehavior.Restrict)
-                .HasConstraintName("InventoryMovements_ibfk_4");
-
-            entity.HasOne(d => d.Warehouse).WithMany(p => p.InventoryMovements)
-                .HasForeignKey(d => d.WarehouseId)
-                .OnDelete(DeleteBehavior.Restrict)
-                .HasConstraintName("InventoryMovements_ibfk_2");
         });
 
         modelBuilder.Entity<PaymentMethod>(entity =>
@@ -306,16 +263,6 @@ public partial class IsetechcJewelryInventoryContext : DbContext
             entity.Property(e => e.ValidTo)
                 .HasColumnType("date")
                 .HasColumnName("validTo");
-
-            entity.HasOne(d => d.PriceList).WithMany(p => p.PriceListDetails)
-                .HasForeignKey(d => d.PriceListId)
-                .OnDelete(DeleteBehavior.Restrict)
-                .HasConstraintName("PriceListDetails_ibfk_1");
-
-            entity.HasOne(d => d.Product).WithMany(p => p.PriceListDetails)
-                .HasForeignKey(d => d.ProductId)
-                .OnDelete(DeleteBehavior.Restrict)
-                .HasConstraintName("PriceListDetails_ibfk_2");
         });
 
         modelBuilder.Entity<Product>(entity =>
@@ -348,15 +295,6 @@ public partial class IsetechcJewelryInventoryContext : DbContext
                 .HasColumnType("int(11)")
                 .HasColumnName("productId");
 
-            entity.HasOne(d => d.Category).WithMany(p => p.ProductCategories)
-                .HasForeignKey(d => d.CategoryId)
-                .OnDelete(DeleteBehavior.Restrict)
-                .HasConstraintName("ProductCategories_ibfk_1");
-
-            entity.HasOne(d => d.Product).WithMany(p => p.ProductCategories)
-                .HasForeignKey(d => d.ProductId)
-                .OnDelete(DeleteBehavior.Restrict)
-                .HasConstraintName("ProductCategories_ibfk_2");
         });
 
         modelBuilder.Entity<ProductImage>(entity =>
@@ -378,10 +316,6 @@ public partial class IsetechcJewelryInventoryContext : DbContext
                 .HasColumnType("int(11)")
                 .HasColumnName("productId");
 
-            entity.HasOne(d => d.Product).WithMany(p => p.ProductImages)
-                .HasForeignKey(d => d.ProductId)
-                .OnDelete(DeleteBehavior.Restrict)
-                .HasConstraintName("ProductImages_ibfk_1");
         });
 
         modelBuilder.Entity<PurchaseOrderDetail>(entity =>
@@ -412,16 +346,6 @@ public partial class IsetechcJewelryInventoryContext : DbContext
             entity.Property(e => e.UnitPrice)
                 .HasPrecision(10)
                 .HasColumnName("unitPrice");
-
-            entity.HasOne(d => d.Product).WithMany(p => p.PurchaseOrderDetails)
-                .HasForeignKey(d => d.ProductId)
-                .OnDelete(DeleteBehavior.Restrict)
-                .HasConstraintName("PurchaseOrderDetail_ibfk_2");
-
-            entity.HasOne(d => d.PurchaseOrder).WithMany(p => p.PurchaseOrderDetails)
-                .HasForeignKey(d => d.PurchaseOrderId)
-                .OnDelete(DeleteBehavior.Restrict)
-                .HasConstraintName("PurchaseOrderDetail_ibfk_1");
         });
 
         modelBuilder.Entity<PurchaseOrderHeader>(entity =>
@@ -453,11 +377,6 @@ public partial class IsetechcJewelryInventoryContext : DbContext
             entity.Property(e => e.Total)
                 .HasPrecision(10)
                 .HasColumnName("total");
-
-            entity.HasOne(d => d.Supplier).WithMany(p => p.PurchaseOrderHeaders)
-                .HasForeignKey(d => d.SupplierId)
-                .OnDelete(DeleteBehavior.Restrict)
-                .HasConstraintName("PurchaseOrderHeader_ibfk_1");
         });
 
         modelBuilder.Entity<SalesOrderDetail>(entity =>
@@ -488,16 +407,6 @@ public partial class IsetechcJewelryInventoryContext : DbContext
             entity.Property(e => e.UnitPrice)
                 .HasPrecision(10)
                 .HasColumnName("unitPrice");
-
-            entity.HasOne(d => d.Product).WithMany(p => p.SalesOrderDetails)
-                .HasForeignKey(d => d.ProductId)
-                .OnDelete(DeleteBehavior.Restrict)
-                .HasConstraintName("SalesOrderDetail_ibfk_2");
-
-            entity.HasOne(d => d.SalesOrder).WithMany(p => p.SalesOrderDetails)
-                .HasForeignKey(d => d.SalesOrderId)
-                .OnDelete(DeleteBehavior.Restrict)
-                .HasConstraintName("SalesOrderDetail_ibfk_1");
         });
 
         modelBuilder.Entity<SalesOrderHeader>(entity =>
@@ -528,16 +437,6 @@ public partial class IsetechcJewelryInventoryContext : DbContext
             entity.Property(e => e.Total)
                 .HasPrecision(10)
                 .HasColumnName("total");
-
-            entity.HasOne(d => d.Customer).WithMany(p => p.SalesOrderHeaders)
-                .HasForeignKey(d => d.CustomerId)
-                .OnDelete(DeleteBehavior.Restrict)
-                .HasConstraintName("SalesOrderHeader_ibfk_1");
-
-            entity.HasOne(d => d.PaymentMethod).WithMany(p => p.SalesOrderHeaders)
-                .HasForeignKey(d => d.PaymentMethodId)
-                .OnDelete(DeleteBehavior.Restrict)
-                .HasConstraintName("SalesOrderHeader_ibfk_2");
         });
 
         modelBuilder.Entity<SalesTaxDetail>(entity =>
@@ -561,10 +460,6 @@ public partial class IsetechcJewelryInventoryContext : DbContext
                 .HasMaxLength(50)
                 .HasColumnName("taxType");
 
-            entity.HasOne(d => d.SalesOrder).WithMany(p => p.SalesTaxDetails)
-                .HasForeignKey(d => d.SalesOrderId)
-                .OnDelete(DeleteBehavior.Restrict)
-                .HasConstraintName("SalesTaxDetail_ibfk_1");
         });
 
         modelBuilder.Entity<Supplier>(entity =>
@@ -614,16 +509,6 @@ public partial class IsetechcJewelryInventoryContext : DbContext
             entity.Property(e => e.SupplierId)
                 .HasColumnType("int(11)")
                 .HasColumnName("supplierId");
-
-            entity.HasOne(d => d.Product).WithMany(p => p.SupplierProducts)
-                .HasForeignKey(d => d.ProductId)
-                .OnDelete(DeleteBehavior.Restrict)
-                .HasConstraintName("SupplierProducts_ibfk_2");
-
-            entity.HasOne(d => d.Supplier).WithMany(p => p.SupplierProducts)
-                .HasForeignKey(d => d.SupplierId)
-                .OnDelete(DeleteBehavior.Restrict)
-                .HasConstraintName("SupplierProducts_ibfk_1");
         });
 
         modelBuilder.Entity<Warehouse>(entity =>
