@@ -99,9 +99,60 @@ namespace J_A_Jewelry.Controllers
             return NoContent();
         }
 
+        // PUT: api/Inventory/UpdateQuantity
+        [HttpPut("UpdateQuantity")]
+        public async Task<IActionResult> UpdateQuantity([FromBody] UpdateQuantityRequest request)
+        {
+            if (request.ProductId == null || request.WarehouseId == null || request.QuantityChange == null)
+            {
+                return BadRequest("ProductId, WarehouseId, and QuantityChange are required.");
+            }
+
+            var inventory = await _context.Inventories
+                .FirstOrDefaultAsync(i => i.ProductId == request.ProductId && i.WarehouseId == request.WarehouseId);
+
+            if (inventory == null)
+            {
+                return NotFound("Inventory not found for the specified product and warehouse.");
+            }
+
+            inventory.Quantity = (inventory.Quantity ?? 0) + request.QuantityChange;
+
+            // Ensure quantity doesn't go below zero
+            if (inventory.Quantity < 0)
+            {
+                inventory.Quantity = 0;
+            }
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!InventoryExists(inventory.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return Ok(inventory);
+        }
+
         private bool InventoryExists(int id)
         {
             return _context.Inventories.Any(e => e.Id == id);
         }
+    }
+
+    public class UpdateQuantityRequest
+    {
+        public int? ProductId { get; set; }
+        public int? WarehouseId { get; set; }
+        public int? QuantityChange { get; set; }
     }
 }

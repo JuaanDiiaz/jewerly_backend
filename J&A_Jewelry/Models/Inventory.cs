@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace J_A_Jewelry.Models;
@@ -14,4 +14,6 @@ public partial class Inventory
     public string? Location { get; set; }
 
     public decimal? Weight { get; set; }
+
+    public int? Quantity { get; set; }
 }
