@@ -75,7 +75,8 @@ public partial class IsetechcJewelryInventoryContext : DbContext
                 .HasColumnName("extraInformation");
             entity.Property(e => e.IdParentCategory)
                 .HasColumnType("int(11)")
-                .HasColumnName("id_parentCategory");
+                .HasColumnName("id_parentCategory")
+                .IsRequired(false);
         });
 
         modelBuilder.Entity<Customer>(entity =>
@@ -166,6 +167,9 @@ public partial class IsetechcJewelryInventoryContext : DbContext
             entity.Property(e => e.Weight)
                 .HasPrecision(10)
                 .HasColumnName("weight");
+            entity.Property(e => e.Quantity)
+                .HasColumnType("int(11)")
+                .HasColumnName("quantity");
 
         });
 
@@ -275,6 +279,9 @@ public partial class IsetechcJewelryInventoryContext : DbContext
             entity.Property(e => e.Description)
                 .HasMaxLength(255)
                 .HasColumnName("description");
+            entity.Property(e => e.Picture)
+                .HasMaxLength(255)
+                .HasColumnName("picture");
         });
 
         modelBuilder.Entity<ProductCategory>(entity =>

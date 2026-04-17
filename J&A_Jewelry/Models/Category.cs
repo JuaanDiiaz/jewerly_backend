@@ -7,7 +7,7 @@ public partial class Category
 {
     public int Id { get; set; }
 
-    public int IdParentCategory { get; set; }
+    public int? IdParentCategory { get; set; }
 
     public string? CategoryNumber { get; set; }
 
