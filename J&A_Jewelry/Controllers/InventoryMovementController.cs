@@ -22,9 +22,21 @@ namespace J_A_Jewelry.Controllers
 
         // GET: api/InventoryMovement
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<InventoryMovement>>> GetInventoryMovements()
+        public async Task<ActionResult<IEnumerable<InventoryMovement>>> GetInventoryMovements(
+            [FromQuery] int? productId = null,
+            [FromQuery] int? warehouseId = null,
+            [FromQuery] string? movementType = null)
         {
-            return await _context.InventoryMovements.ToListAsync();
+            var query = _context.InventoryMovements.AsQueryable();
+
+            if (productId.HasValue)
+                query = query.Where(m => m.ProductId == productId.Value);
+            if (warehouseId.HasValue)
+                query = query.Where(m => m.WarehouseId == warehouseId.Value);
+            if (!string.IsNullOrEmpty(movementType))
+                query = query.Where(m => m.MovementType == movementType);
+
+            return await query.ToListAsync();
         }
 
         // GET: api/InventoryMovement/5
@@ -79,6 +91,29 @@ namespace J_A_Jewelry.Controllers
         {
             _context.InventoryMovements.Add(inventoryMovement);
             await _context.SaveChangesAsync();
+
+            // Automatically update Inventory.Quantity based on movement type
+            var inventory = await _context.Inventories
+                .FirstOrDefaultAsync(i => i.ProductId == inventoryMovement.ProductId && i.WarehouseId == inventoryMovement.WarehouseId);
+
+            if (inventory != null && inventoryMovement.Quantity.HasValue)
+            {
+                switch (inventoryMovement.MovementType?.ToUpperInvariant())
+                {
+                    case "IN":
+                        inventory.Quantity = (inventory.Quantity ?? 0) + inventoryMovement.Quantity;
+                        break;
+                    case "OUT":
+                        inventory.Quantity = (inventory.Quantity ?? 0) - inventoryMovement.Quantity;
+                        if (inventory.Quantity < 0) inventory.Quantity = 0;
+                        break;
+                    case "ADJUSTMENT":
+                        inventory.Quantity = (inventory.Quantity ?? 0) + inventoryMovement.Quantity;
+                        if (inventory.Quantity < 0) inventory.Quantity = 0;
+                        break;
+                }
+                await _context.SaveChangesAsync();
+            }
 
             return CreatedAtAction("GetInventoryMovement", new { id = inventoryMovement.Id }, inventoryMovement);
         }

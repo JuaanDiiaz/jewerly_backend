@@ -22,9 +22,14 @@ namespace J_A_Jewelry.Controllers
 
         // GET: api/CustomerPayment
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CustomerPayment>>> GetCustomerPayments()
+        public async Task<ActionResult<IEnumerable<CustomerPayment>>> GetCustomerPayments([FromQuery] int? salesOrderId = null)
         {
-            return await _context.CustomerPayments.ToListAsync();
+            var query = _context.CustomerPayments.AsQueryable();
+
+            if (salesOrderId.HasValue)
+                query = query.Where(p => p.SalesOrderId == salesOrderId.Value);
+
+            return await query.ToListAsync();
         }
 
         // GET: api/CustomerPayment/5
