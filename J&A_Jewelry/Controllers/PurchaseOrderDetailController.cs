@@ -22,9 +22,14 @@ namespace J_A_Jewelry.Controllers
 
         // GET: api/PurchaseOrderDetail
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PurchaseOrderDetail>>> GetPurchaseOrderDetails()
+        public async Task<ActionResult<IEnumerable<PurchaseOrderDetail>>> GetPurchaseOrderDetails([FromQuery] int? purchaseOrderId = null)
         {
-            return await _context.PurchaseOrderDetails.ToListAsync();
+            var query = _context.PurchaseOrderDetails.AsQueryable();
+
+            if (purchaseOrderId.HasValue)
+                query = query.Where(d => d.PurchaseOrderId == purchaseOrderId.Value);
+
+            return await query.ToListAsync();
         }
 
         // GET: api/PurchaseOrderDetail/5
