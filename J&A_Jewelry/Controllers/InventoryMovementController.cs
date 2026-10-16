@@ -20,23 +20,45 @@ namespace J_A_Jewelry.Controllers
             _context = context;
         }
 
-        // GET: api/InventoryMovement
+        // GET: api/InventoryMovement?page=1&page_size=50&from_date&to_date&productId&warehouseId&movementType
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<InventoryMovement>>> GetInventoryMovements(
-            [FromQuery] int? productId = null,
-            [FromQuery] int? warehouseId = null,
-            [FromQuery] string? movementType = null)
+        public async Task<ActionResult<PagedResult<InventoryMovement>>> GetInventoryMovements(
+            [FromQuery(Name = "page")] int? page = null,
+            [FromQuery(Name = "page_size")] int? pageSize = null,
+            [FromQuery(Name = "from_date")] DateTime? fromDate = null,
+            [FromQuery(Name = "to_date")] DateTime? toDate = null,
+            [FromQuery(Name = "productId")] int? productId = null,
+            [FromQuery(Name = "warehouseId")] int? warehouseId = null,
+            [FromQuery(Name = "movementType")] string? movementType = null)
         {
-            var query = _context.InventoryMovements.AsQueryable();
+            var safePage = Math.Max(1, page ?? 1);
+            var safeSize = Math.Clamp(pageSize ?? 50, 1, 200);
 
+            var query = _context.InventoryMovements.AsNoTracking().AsQueryable();
             if (productId.HasValue)
                 query = query.Where(m => m.ProductId == productId.Value);
             if (warehouseId.HasValue)
                 query = query.Where(m => m.WarehouseId == warehouseId.Value);
             if (!string.IsNullOrEmpty(movementType))
                 query = query.Where(m => m.MovementType == movementType);
+            if (fromDate.HasValue)
+                query = query.Where(m => m.MovementDate >= fromDate);
+            if (toDate.HasValue)
+                query = query.Where(m => m.MovementDate < toDate.Value.AddDays(1));
 
-            return await query.ToListAsync();
+            var result = new PagedResult<InventoryMovement>
+            {
+                Page = safePage,
+                PageSize = safeSize,
+                TotalCount = await query.CountAsync(),
+                Data = await query
+                    .OrderByDescending(m => m.Id)
+                    .Skip((safePage - 1) * safeSize)
+                    .Take(safeSize)
+                    .ToListAsync()
+            };
+
+            return result;
         }
 
         // GET: api/InventoryMovement/5

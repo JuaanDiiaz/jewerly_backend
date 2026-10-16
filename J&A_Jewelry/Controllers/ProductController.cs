@@ -20,11 +20,33 @@ namespace J_A_Jewelry.Controllers
             _context = context;
         }
 
-        // GET: api/Product
+        // GET: api/Product?page=1&page_size=50&q=search
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
+        public async Task<ActionResult<PagedResult<Product>>> GetProducts(
+            [FromQuery(Name = "page")] int? page = null,
+            [FromQuery(Name = "page_size")] int? pageSize = null,
+            [FromQuery] string? q = null)
         {
-            return await _context.Products.ToListAsync();
+            var safePage = Math.Max(1, page ?? 1);
+            var safeSize = Math.Clamp(pageSize ?? 50, 1, 200);
+
+            var query = _context.Products.AsNoTracking().AsQueryable();
+            if (!string.IsNullOrWhiteSpace(q))
+                query = query.Where(p => (p.Description ?? "").Contains(q));
+
+            var result = new PagedResult<Product>
+            {
+                Page = safePage,
+                PageSize = safeSize,
+                TotalCount = await query.CountAsync(),
+                Data = await query
+                    .OrderBy(p => p.Id)
+                    .Skip((safePage - 1) * safeSize)
+                    .Take(safeSize)
+                    .ToListAsync()
+            };
+
+            return result;
         }
 
         // GET: api/Product/5

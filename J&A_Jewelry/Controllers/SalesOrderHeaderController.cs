@@ -20,11 +20,36 @@ namespace J_A_Jewelry.Controllers
             _context = context;
         }
 
-        // GET: api/SalesOrderHeader
+        // GET: api/SalesOrderHeader?page=1&page_size=50&from_date&to_date
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<SalesOrderHeader>>> GetSalesOrderHeaders()
+        public async Task<ActionResult<PagedResult<SalesOrderHeader>>> GetSalesOrderHeaders(
+            [FromQuery(Name = "page")] int? page = null,
+            [FromQuery(Name = "page_size")] int? pageSize = null,
+            [FromQuery(Name = "from_date")] DateTime? fromDate = null,
+            [FromQuery(Name = "to_date")] DateTime? toDate = null)
         {
-            return await _context.SalesOrderHeaders.ToListAsync();
+            var safePage = Math.Max(1, page ?? 1);
+            var safeSize = Math.Clamp(pageSize ?? 50, 1, 200);
+
+            var query = _context.SalesOrderHeaders.AsNoTracking().AsQueryable();
+            if (fromDate.HasValue)
+                query = query.Where(h => h.SaleDate >= fromDate);
+            if (toDate.HasValue)
+                query = query.Where(h => h.SaleDate < toDate.Value.AddDays(1));
+
+            var result = new PagedResult<SalesOrderHeader>
+            {
+                Page = safePage,
+                PageSize = safeSize,
+                TotalCount = await query.CountAsync(),
+                Data = await query
+                    .OrderByDescending(h => h.Id)
+                    .Skip((safePage - 1) * safeSize)
+                    .Take(safeSize)
+                    .ToListAsync()
+            };
+
+            return result;
         }
 
         // GET: api/SalesOrderHeader/5
@@ -143,7 +168,7 @@ namespace J_A_Jewelry.Controllers
                 CustomerId = request.CustomerId,
                 Total = total,
                 PaymentMethodId = request.PaymentMethodId,
-                Notes = request.SalespersonName ?? ""
+                SalespersonName = request.SalespersonName
             };
             _context.SalesOrderHeaders.Add(header);
             await _context.SaveChangesAsync();
