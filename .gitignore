@@ -1,0 +1,13 @@
+# Build artifacts
+bin/
+obj/
+artifacts/
+
+# Visual Studio / Rider cache
+.vs/
+.idea/
+*.user
+*.suo
+
+# Secrets (never commit)
+appsettings.local.json
