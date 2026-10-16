@@ -180,6 +180,14 @@ public partial class IsetechcJewelryInventoryContext
             .WithMany()
             .HasForeignKey(c => c.IdParentCategory)
             .OnDelete(DeleteBehavior.Restrict);
+
+        // TaxRate: a null CategoryId marks the fallback rate for
+        // uncategorized products.
+        modelBuilder.Entity<TaxRate>()
+            .HasOne<Category>()
+            .WithMany()
+            .HasForeignKey(tr => tr.CategoryId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 
     private static void ConfigureSeedData(ModelBuilder modelBuilder)
@@ -213,6 +221,12 @@ public partial class IsetechcJewelryInventoryContext
             new Category { Id = 3, CategoryNumber = "CAT003", Description = "Bracelets" },
             new Category { Id = 4, CategoryNumber = "CAT004", Description = "Earrings" },
             new Category { Id = 5, CategoryNumber = "CAT005", Description = "Watches" }
+        );
+
+        // Default tax rate: the fallback for products with no category
+        // (TaxRate.CategoryId is null there). Mexico IVA.
+        modelBuilder.Entity<TaxRate>().HasData(
+            new TaxRate { Id = 1, CategoryId = null, Name = "IVA 16%", Rate = 0.16m, IsActive = true }
         );
     }
 }

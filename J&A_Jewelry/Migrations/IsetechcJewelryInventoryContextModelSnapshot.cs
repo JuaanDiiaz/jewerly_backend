@@ -658,6 +658,16 @@ namespace J_A_Jewelry.Migrations
                         .HasColumnType("varchar(100)")
                         .HasColumnName("salespersonName");
 
+                    b.Property<decimal?>("Subtotal")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("decimal(10,2)")
+                        .HasColumnName("subtotal");
+
+                    b.Property<decimal?>("TaxAmount")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("decimal(10,2)")
+                        .HasColumnName("taxAmount");
+
                     b.Property<decimal?>("Total")
                         .HasPrecision(10, 2)
                         .HasColumnType("decimal(10,2)")
@@ -784,6 +794,51 @@ namespace J_A_Jewelry.Migrations
                         .HasDatabaseName("supplierId1");
 
                     b.ToTable("SupplierProducts");
+                });
+
+            modelBuilder.Entity("J_A_Jewelry.Models.TaxRate", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int(11)")
+                        .HasColumnName("id");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("CategoryId")
+                        .HasColumnType("int(11)")
+                        .HasColumnName("categoryId");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("isActive");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("name");
+
+                    b.Property<decimal?>("Rate")
+                        .HasPrecision(5, 4)
+                        .HasColumnType("decimal(5,4)")
+                        .HasColumnName("rate");
+
+                    b.HasKey("Id")
+                        .HasName("PRIMARY");
+
+                    b.HasIndex(new[] { "CategoryId" }, "categoryId")
+                        .HasDatabaseName("categoryId1");
+
+                    b.ToTable("TaxRate", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            IsActive = true,
+                            Name = "IVA 16%",
+                            Rate = 0.16m
+                        });
                 });
 
             modelBuilder.Entity("J_A_Jewelry.Models.Warehouse", b =>
@@ -986,6 +1041,14 @@ namespace J_A_Jewelry.Migrations
                     b.HasOne("J_A_Jewelry.Models.Supplier", null)
                         .WithMany()
                         .HasForeignKey("SupplierId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("J_A_Jewelry.Models.TaxRate", b =>
+                {
+                    b.HasOne("J_A_Jewelry.Models.Category", null)
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 #pragma warning restore 612, 618

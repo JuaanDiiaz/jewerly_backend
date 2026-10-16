@@ -143,9 +143,28 @@ namespace J_A_Jewelry.Controllers
             if (warehouse == null)
                 return BadRequest("Invalid warehouseId");
 
-            // Validate all items have sufficient stock and calculate total
-            decimal total = 0;
-            var itemValidations = new List<(int productId, int qty, decimal price, int available)>();
+            // Validate all items have sufficient stock and calculate totals.
+            // Pricing is IVA-exclusive: the posted unit price is pre-tax and
+            // the server computes the tax from the product's category rate
+            // (falling back to the rate with a null CategoryId, i.e. the
+            // default rate for uncategorized products). Per-line rounding,
+            // mid-point away from zero, then summed.
+            var activeRates = await _context.TaxRates
+                .Where(r => r.IsActive)
+                .ToListAsync();
+            var requestedProductIds = request.Items.Select(i => i.ProductId).Distinct().ToList();
+            var productCategoryIds = await _context.ProductCategories
+                .Where(pc => pc.ProductId != null && requestedProductIds.Contains(pc.ProductId.Value))
+                .ToDictionaryAsync(pc => pc.Id, pc => new { pc.ProductId, pc.CategoryId });
+
+            var defaultRate = activeRates.FirstOrDefault(r => r.CategoryId == null);
+
+            decimal subtotal = 0;
+            decimal taxTotal = 0;
+            // Amount charged per tax rate, keyed by (rate name, rate) so the
+            // SalesTaxDetail history rows map to what the Tax Totals report
+            // groups on.
+            var taxByRate = new Dictionary<string, decimal>();
 
             foreach (var item in request.Items)
             {
@@ -156,16 +175,35 @@ namespace J_A_Jewelry.Controllers
                 if (item.Quantity > available)
                     return BadRequest($"Insufficient stock for productId {item.ProductId}. Available: {available}, Requested: {item.Quantity}");
 
-                decimal itemTotal = item.Quantity * item.UnitPrice;
-                total += itemTotal;
-                itemValidations.Add((item.ProductId, item.Quantity, item.UnitPrice, available));
+                var categoryIds = productCategoryIds.Values
+                    .Where(pc => pc.ProductId == item.ProductId)
+                    .Select(pc => pc.CategoryId)
+                    .ToList();
+                var rate = activeRates.FirstOrDefault(r => r.CategoryId.HasValue && categoryIds.Contains(r.CategoryId))
+                           ?? defaultRate;
+
+                decimal itemBase = item.Quantity * item.UnitPrice;
+                decimal itemTax = rate?.Rate != null
+                    ? decimal.Round(itemBase * rate.Rate.Value, 2, MidpointRounding.AwayFromZero)
+                    : 0;
+                subtotal += itemBase;
+                taxTotal += itemTax;
+                if (itemTax > 0 && rate != null)
+                {
+                    var key = rate.Name ?? $"Rate #{rate.Id}";
+                    taxByRate[key] = taxByRate.GetValueOrDefault(key) + itemTax;
+                }
             }
+
+            decimal total = subtotal + taxTotal;
 
             // Create sales order header
             var header = new SalesOrderHeader
             {
                 SaleDate = request.SaleDate ?? DateTime.Now,
                 CustomerId = request.CustomerId,
+                Subtotal = subtotal,
+                TaxAmount = taxTotal,
                 Total = total,
                 PaymentMethodId = request.PaymentMethodId,
                 SalespersonName = request.SalespersonName
@@ -217,12 +255,26 @@ namespace J_A_Jewelry.Controllers
 
             await _context.SaveChangesAsync();
 
+            // Record the per-rate tax amounts in SalesTaxDetail — the rows the
+            // Tax Totals report groups on.
+            var taxDetails = taxByRate
+                .Select(kvp => new SalesTaxDetail
+                {
+                    SalesOrderId = header.Id,
+                    TaxType = kvp.Key,
+                    TaxAmount = kvp.Value
+                })
+                .ToList();
+            _context.SalesTaxDetails.AddRange(taxDetails);
+            await _context.SaveChangesAsync();
+
             return Ok(new
             {
                 salesOrderId = header.Id,
                 header = header,
                 details = details,
-                movements = movements
+                movements = movements,
+                taxSummary = taxByRate.Select(kvp => new { taxType = kvp.Key, taxAmount = kvp.Value })
             });
         }
     }

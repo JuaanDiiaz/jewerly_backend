@@ -51,6 +51,8 @@ public partial class IsetechcJewelryInventoryContext : DbContext
 
     public virtual DbSet<SupplierProduct> SupplierProducts { get; set; }
 
+    public virtual DbSet<TaxRate> TaxRates { get; set; }
+
     public virtual DbSet<Warehouse> Warehouses { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { }
@@ -441,6 +443,12 @@ public partial class IsetechcJewelryInventoryContext : DbContext
             entity.Property(e => e.SaleDate)
                 .HasColumnType("date")
                 .HasColumnName("saleDate");
+            entity.Property(e => e.Subtotal)
+                .HasPrecision(10, 2)
+                .HasColumnName("subtotal");
+            entity.Property(e => e.TaxAmount)
+                .HasPrecision(10, 2)
+                .HasColumnName("taxAmount");
             entity.Property(e => e.Total)
                 .HasPrecision(10, 2)
                 .HasColumnName("total");
@@ -467,6 +475,30 @@ public partial class IsetechcJewelryInventoryContext : DbContext
                 .HasMaxLength(50)
                 .HasColumnName("taxType");
 
+        });
+
+        modelBuilder.Entity<TaxRate>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity.ToTable("TaxRate");
+
+            entity.HasIndex(e => e.CategoryId, "categoryId");
+
+            entity.Property(e => e.Id)
+                .HasColumnType("int(11)")
+                .HasColumnName("id");
+            entity.Property(e => e.CategoryId)
+                .HasColumnType("int(11)")
+                .HasColumnName("categoryId");
+            entity.Property(e => e.IsActive)
+                .HasColumnName("isActive");
+            entity.Property(e => e.Name)
+                .HasMaxLength(100)
+                .HasColumnName("name");
+            entity.Property(e => e.Rate)
+                .HasPrecision(5, 4)
+                .HasColumnName("rate");
         });
 
         modelBuilder.Entity<Supplier>(entity =>

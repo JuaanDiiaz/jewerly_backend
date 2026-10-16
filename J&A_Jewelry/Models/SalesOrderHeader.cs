@@ -11,6 +11,10 @@ public partial class SalesOrderHeader
 
     public int? CustomerId { get; set; }
 
+    public decimal? Subtotal { get; set; }
+
+    public decimal? TaxAmount { get; set; }
+
     public decimal? Total { get; set; }
 
     public int? PaymentMethodId { get; set; }
