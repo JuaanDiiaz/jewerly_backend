@@ -123,7 +123,7 @@ public partial class IsetechcJewelryInventoryContext : DbContext
                 .HasColumnType("int(11)")
                 .HasColumnName("id");
             entity.Property(e => e.Amount)
-                .HasPrecision(10)
+                .HasPrecision(10, 2)
                 .HasColumnName("amount");
             entity.Property(e => e.CustomerId)
                 .HasColumnType("int(11)")
@@ -165,7 +165,7 @@ public partial class IsetechcJewelryInventoryContext : DbContext
                 .HasColumnType("int(11)")
                 .HasColumnName("warehouseId");
             entity.Property(e => e.Weight)
-                .HasPrecision(10)
+                .HasPrecision(10, 2)
                 .HasColumnName("weight");
             entity.Property(e => e.Quantity)
                 .HasColumnType("int(11)")
@@ -253,7 +253,7 @@ public partial class IsetechcJewelryInventoryContext : DbContext
                 .HasColumnType("int(11)")
                 .HasColumnName("id");
             entity.Property(e => e.Price)
-                .HasPrecision(10)
+                .HasPrecision(10, 2)
                 .HasColumnName("price");
             entity.Property(e => e.PriceListId)
                 .HasColumnType("int(11)")
@@ -348,10 +348,10 @@ public partial class IsetechcJewelryInventoryContext : DbContext
                 .HasColumnType("int(11)")
                 .HasColumnName("quantity");
             entity.Property(e => e.Total)
-                .HasPrecision(10)
+                .HasPrecision(10, 2)
                 .HasColumnName("total");
             entity.Property(e => e.UnitPrice)
-                .HasPrecision(10)
+                .HasPrecision(10, 2)
                 .HasColumnName("unitPrice");
         });
 
@@ -382,7 +382,7 @@ public partial class IsetechcJewelryInventoryContext : DbContext
                 .HasColumnType("int(11)")
                 .HasColumnName("supplierId");
             entity.Property(e => e.Total)
-                .HasPrecision(10)
+                .HasPrecision(10, 2)
                 .HasColumnName("total");
         });
 
@@ -409,10 +409,10 @@ public partial class IsetechcJewelryInventoryContext : DbContext
                 .HasColumnType("int(11)")
                 .HasColumnName("salesOrderId");
             entity.Property(e => e.Total)
-                .HasPrecision(10)
+                .HasPrecision(10, 2)
                 .HasColumnName("total");
             entity.Property(e => e.UnitPrice)
-                .HasPrecision(10)
+                .HasPrecision(10, 2)
                 .HasColumnName("unitPrice");
         });
 
@@ -442,7 +442,7 @@ public partial class IsetechcJewelryInventoryContext : DbContext
                 .HasColumnType("date")
                 .HasColumnName("saleDate");
             entity.Property(e => e.Total)
-                .HasPrecision(10)
+                .HasPrecision(10, 2)
                 .HasColumnName("total");
         });
 
@@ -461,7 +461,7 @@ public partial class IsetechcJewelryInventoryContext : DbContext
                 .HasColumnType("int(11)")
                 .HasColumnName("salesOrderId");
             entity.Property(e => e.TaxAmount)
-                .HasPrecision(10)
+                .HasPrecision(10, 2)
                 .HasColumnName("taxAmount");
             entity.Property(e => e.TaxType)
                 .HasMaxLength(50)
@@ -505,7 +505,7 @@ public partial class IsetechcJewelryInventoryContext : DbContext
                 .HasMaxLength(255)
                 .HasColumnName("description");
             entity.Property(e => e.Price)
-                .HasPrecision(10)
+                .HasPrecision(10, 2)
                 .HasColumnName("price");
             entity.Property(e => e.ProductId)
                 .HasColumnType("int(11)")

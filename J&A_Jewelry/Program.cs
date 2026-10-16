@@ -1,6 +1,8 @@
 using J_A_Jewelry.Models;
 using Microsoft.EntityFrameworkCore;
 
+var serverVersion = new MySqlServerVersion(new Version(8, 0, 39));
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -16,8 +18,10 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 });
 
 // Add database context
+// MySqlServerVersion is declared up front (instead of ServerVersion.AutoDetect)
+// so startup and design-time tooling never require a live database ping.
 builder.Services.AddDbContext<IsetechcJewelryInventoryContext>(options =>
-    options.UseMySQL(builder.Configuration.GetConnectionString("myDBConn")));
+    options.UseMySql(builder.Configuration.GetConnectionString("myDBConn"), serverVersion));
 
 // Add CORS policy
 builder.Services.AddCors(options =>
@@ -33,7 +37,7 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Use CORS policy - Asegúrate de que esto esté antes de UseAuthorization y MapControllers
+// Use CORS policy - Asegï¿½rate de que esto estï¿½ antes de UseAuthorization y MapControllers
 app.UseCors("AllowAllOrigins");
 
 app.UseSwagger();
