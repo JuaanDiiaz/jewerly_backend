@@ -11,3 +11,5 @@ artifacts/
 
 # Secrets (never commit)
 appsettings.local.json
+# local DB dumps before applying migrations
+backups/
