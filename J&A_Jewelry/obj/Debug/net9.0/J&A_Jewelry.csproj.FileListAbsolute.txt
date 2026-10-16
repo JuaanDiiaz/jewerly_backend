@@ -713,3 +713,4 @@ C:\Users\Juan\source\repos\J&A_Jewelry\J&A_Jewelry\obj\Debug\net9.0\refint\J&A_J
 C:\Users\Juan\source\repos\J&A_Jewelry\J&A_Jewelry\obj\Debug\net9.0\J&A_Jewelry.pdb
 C:\Users\Juan\source\repos\J&A_Jewelry\J&A_Jewelry\obj\Debug\net9.0\J&A_Jewelry.genruntimeconfig.cache
 C:\Users\Juan\source\repos\J&A_Jewelry\J&A_Jewelry\obj\Debug\net9.0\ref\J&A_Jewelry.dll
+C:\Users\Juan\source\repos\J&A_Jewelry\J&A_Jewelry\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt

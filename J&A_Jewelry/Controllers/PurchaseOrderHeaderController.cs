@@ -154,6 +154,19 @@ namespace J_A_Jewelry.Controllers
                 {
                     inventory.Quantity = (inventory.Quantity ?? 0) + detail.Quantity;
                 }
+                else
+                {
+                    // First stock for this product in this warehouse: create the
+                    // row. Without it the movement logs the receipt but the
+                    // Inventory table — and any stock query — shows nothing.
+                    _context.Inventories.Add(new Inventory
+                    {
+                        ProductId = detail.ProductId,
+                        WarehouseId = request.WarehouseId,
+                        Quantity = detail.Quantity,
+                        Location = string.Empty,
+                    });
+                }
             }
 
             // Update header status and reception date
