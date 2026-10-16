@@ -56,6 +56,15 @@ namespace J_A_Jewelry.Controllers
                 return BadRequest();
             }
 
+            var lineError = ValidateLine(salesOrderDetail);
+            if (lineError != null)
+            {
+                return lineError;
+            }
+
+            // The line total is a derived value — never trust the client's.
+            salesOrderDetail.Total = (salesOrderDetail.Quantity ?? 0) * (salesOrderDetail.UnitPrice ?? 0);
+
             _context.Entry(salesOrderDetail).State = EntityState.Modified;
 
             try
@@ -82,6 +91,15 @@ namespace J_A_Jewelry.Controllers
         [HttpPost]
         public async Task<ActionResult<SalesOrderDetail>> PostSalesOrderDetail(SalesOrderDetail salesOrderDetail)
         {
+            var lineError = ValidateLine(salesOrderDetail);
+            if (lineError != null)
+            {
+                return lineError;
+            }
+
+            // The line total is a derived value — never trust the client's.
+            salesOrderDetail.Total = (salesOrderDetail.Quantity ?? 0) * (salesOrderDetail.UnitPrice ?? 0);
+
             _context.SalesOrderDetails.Add(salesOrderDetail);
             await _context.SaveChangesAsync();
 
@@ -107,6 +125,19 @@ namespace J_A_Jewelry.Controllers
         private bool SalesOrderDetailExists(int id)
         {
             return _context.SalesOrderDetails.Any(e => e.Id == id);
+        }
+
+        private static BadRequestObjectResult? ValidateLine(SalesOrderDetail detail)
+        {
+            if ((detail.Quantity ?? 0) <= 0)
+            {
+                return new BadRequestObjectResult("Quantity must be at least 1");
+            }
+            if (detail.UnitPrice != null && detail.UnitPrice < 0)
+            {
+                return new BadRequestObjectResult("Unit price cannot be negative");
+            }
+            return null;
         }
     }
 }

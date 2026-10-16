@@ -51,6 +51,12 @@ namespace J_A_Jewelry.Controllers
                 return BadRequest();
             }
 
+            var validation = await ValidatePriceListDetail(priceListDetail, excludeId: id);
+            if (validation != null)
+            {
+                return validation;
+            }
+
             _context.Entry(priceListDetail).State = EntityState.Modified;
 
             try
@@ -77,6 +83,12 @@ namespace J_A_Jewelry.Controllers
         [HttpPost]
         public async Task<ActionResult<PriceListDetail>> PostPriceListDetail(PriceListDetail priceListDetail)
         {
+            var validation = await ValidatePriceListDetail(priceListDetail, excludeId: null);
+            if (validation != null)
+            {
+                return validation;
+            }
+
             _context.PriceListDetails.Add(priceListDetail);
             await _context.SaveChangesAsync();
 
@@ -102,6 +114,33 @@ namespace J_A_Jewelry.Controllers
         private bool PriceListDetailExists(int id)
         {
             return _context.PriceListDetails.Any(e => e.Id == id);
+        }
+
+        /// <summary>
+        /// Every product appears once per price list, and no price is
+        /// negative — the POS offers this price as a choice, so duplicates or
+        /// junk values corrupt what it sells at.
+        /// </summary>
+        private async Task<BadRequestObjectResult?> ValidatePriceListDetail(PriceListDetail detail, int? excludeId)
+        {
+            if (detail.Price != null && detail.Price < 0)
+            {
+                return BadRequest("Price cannot be negative");
+            }
+
+            if (detail.PriceListId != null && detail.ProductId != null)
+            {
+                var duplicateQuery = _context.PriceListDetails
+                    .Where(d => d.PriceListId == detail.PriceListId
+                             && d.ProductId == detail.ProductId
+                             && (excludeId == null || d.Id != excludeId));
+                if (await duplicateQuery.AnyAsync())
+                {
+                    return BadRequest($"Product {detail.ProductId} already has a price in price list {detail.PriceListId}");
+                }
+            }
+
+            return null;
         }
     }
 }

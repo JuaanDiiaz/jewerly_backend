@@ -51,6 +51,12 @@ namespace J_A_Jewelry.Controllers
                 return BadRequest();
             }
 
+            var quantityError = ValidateQuantity(inventory.Quantity);
+            if (quantityError != null)
+            {
+                return quantityError;
+            }
+
             _context.Entry(inventory).State = EntityState.Modified;
 
             try
@@ -77,6 +83,12 @@ namespace J_A_Jewelry.Controllers
         [HttpPost]
         public async Task<ActionResult<Inventory>> PostInventory(Inventory inventory)
         {
+            var quantityError = ValidateQuantity(inventory.Quantity);
+            if (quantityError != null)
+            {
+                return quantityError;
+            }
+
             _context.Inventories.Add(inventory);
             await _context.SaveChangesAsync();
 
@@ -116,12 +128,15 @@ namespace J_A_Jewelry.Controllers
                 return NotFound("Inventory not found for the specified product and warehouse.");
             }
 
-            inventory.Quantity = (inventory.Quantity ?? 0) + request.QuantityChange;
+            var current = inventory.Quantity ?? 0;
+            inventory.Quantity = current + request.QuantityChange;
 
-            // Ensure quantity doesn't go below zero
+            // Stock truth: a change that would take on-hand below zero is
+            // refused, not silently clamped — a clamp hides the mistake.
             if (inventory.Quantity < 0)
             {
-                inventory.Quantity = 0;
+                return BadRequest(
+                    $"Insufficient stock: applying {request.QuantityChange} to productId {request.ProductId} in warehouse {request.WarehouseId} would drop on-hand below zero (currently {current}).");
             }
 
             try
@@ -146,6 +161,15 @@ namespace J_A_Jewelry.Controllers
         private bool InventoryExists(int id)
         {
             return _context.Inventories.Any(e => e.Id == id);
+        }
+
+        private static BadRequestObjectResult? ValidateQuantity(int? quantity)
+        {
+            if (quantity == null || quantity < 0)
+            {
+                return new BadRequestObjectResult("Quantity cannot be negative");
+            }
+            return null;
         }
     }
 

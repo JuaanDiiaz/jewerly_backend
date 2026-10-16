@@ -111,31 +111,80 @@ namespace J_A_Jewelry.Controllers
         [HttpPost]
         public async Task<ActionResult<InventoryMovement>> PostInventoryMovement(InventoryMovement inventoryMovement)
         {
-            _context.InventoryMovements.Add(inventoryMovement);
-            await _context.SaveChangesAsync();
+            // Only typed, positive movements may touch stock. An unrecognized
+            // type used to be recorded while applying nothing to stock,
+            // desynchronizing the movement log from the inventory table.
+            if (inventoryMovement.ProductId == null || inventoryMovement.WarehouseId == null)
+            {
+                return BadRequest("ProductId and WarehouseId are required");
+            }
+            var type = inventoryMovement.MovementType?.Trim().ToUpperInvariant();
+            if (type is not ("IN" or "OUT" or "ADJUSTMENT"))
+            {
+                return BadRequest("MovementType must be IN, OUT, or ADJUSTMENT");
+            }
+            if (inventoryMovement.Quantity == null || inventoryMovement.Quantity == 0)
+            {
+                return BadRequest("Quantity cannot be zero");
+            }
+            if (!await _context.Products.AnyAsync(p => p.Id == inventoryMovement.ProductId))
+            {
+                return BadRequest($"Invalid productId {inventoryMovement.ProductId}");
+            }
+            if (!await _context.Warehouses.AnyAsync(w => w.Id == inventoryMovement.WarehouseId))
+            {
+                return BadRequest($"Invalid warehouseId {inventoryMovement.WarehouseId}");
+            }
+            // IN/OUT are directional and take a magnitude; ADJUSTMENT is a
+            // signed delta (negative = shrinkage from a physical count).
+            if (type != "ADJUSTMENT" && inventoryMovement.Quantity <= 0)
+            {
+                return BadRequest("Quantity must be positive for IN and OUT movements");
+            }
 
-            // Automatically update Inventory.Quantity based on movement type
+            // Movement and stock change land together or not at all — posting
+            // them in two saves used to leave a half-applied movement.
+            await using var transaction = await _context.Database.BeginTransactionAsync();
+
             var inventory = await _context.Inventories
                 .FirstOrDefaultAsync(i => i.ProductId == inventoryMovement.ProductId && i.WarehouseId == inventoryMovement.WarehouseId);
 
-            if (inventory != null && inventoryMovement.Quantity.HasValue)
+            if (inventory == null)
             {
-                switch (inventoryMovement.MovementType?.ToUpperInvariant())
+                if (type == "OUT")
                 {
-                    case "IN":
-                        inventory.Quantity = (inventory.Quantity ?? 0) + inventoryMovement.Quantity;
-                        break;
-                    case "OUT":
-                        inventory.Quantity = (inventory.Quantity ?? 0) - inventoryMovement.Quantity;
-                        if (inventory.Quantity < 0) inventory.Quantity = 0;
-                        break;
-                    case "ADJUSTMENT":
-                        inventory.Quantity = (inventory.Quantity ?? 0) + inventoryMovement.Quantity;
-                        if (inventory.Quantity < 0) inventory.Quantity = 0;
-                        break;
+                    return BadRequest("No stock record exists for this product and warehouse, so nothing can be removed");
                 }
-                await _context.SaveChangesAsync();
+                _context.Inventories.Add(new Inventory
+                {
+                    ProductId = inventoryMovement.ProductId,
+                    WarehouseId = inventoryMovement.WarehouseId,
+                    Quantity = inventoryMovement.Quantity,
+                    Location = string.Empty,
+                });
             }
+            else
+            {
+                var current = inventory.Quantity ?? 0;
+                inventory.Quantity = type switch
+                {
+                    "IN" => current + inventoryMovement.Quantity.Value,
+                    "OUT" => current - inventoryMovement.Quantity.Value,
+                    _ => current + inventoryMovement.Quantity.Value, // ADJUSTMENT
+                };
+
+                // Stock truth: refused rather than clamped, for the same
+                // reason UpdateQuantity refuses below-zero results.
+                if (inventory.Quantity < 0)
+                {
+                    return BadRequest(
+                        $"Insufficient stock: {type} of {inventoryMovement.Quantity} for productId {inventoryMovement.ProductId} in warehouse {inventoryMovement.WarehouseId} would drop on-hand below zero (currently {current})");
+                }
+            }
+
+            _context.InventoryMovements.Add(inventoryMovement);
+            await _context.SaveChangesAsync();
+            await transaction.CommitAsync();
 
             return CreatedAtAction("GetInventoryMovement", new { id = inventoryMovement.Id }, inventoryMovement);
         }

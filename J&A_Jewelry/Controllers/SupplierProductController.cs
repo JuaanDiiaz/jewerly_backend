@@ -51,6 +51,12 @@ namespace J_A_Jewelry.Controllers
                 return BadRequest();
             }
 
+            var priceError = ValidatePrice(supplierProduct);
+            if (priceError != null)
+            {
+                return priceError;
+            }
+
             _context.Entry(supplierProduct).State = EntityState.Modified;
 
             try
@@ -77,6 +83,12 @@ namespace J_A_Jewelry.Controllers
         [HttpPost]
         public async Task<ActionResult<SupplierProduct>> PostSupplierProduct(SupplierProduct supplierProduct)
         {
+            var priceError = ValidatePrice(supplierProduct);
+            if (priceError != null)
+            {
+                return priceError;
+            }
+
             _context.SupplierProducts.Add(supplierProduct);
             await _context.SaveChangesAsync();
 
@@ -102,6 +114,15 @@ namespace J_A_Jewelry.Controllers
         private bool SupplierProductExists(int id)
         {
             return _context.SupplierProducts.Any(e => e.Id == id);
+        }
+
+        private static BadRequestObjectResult? ValidatePrice(SupplierProduct supplierProduct)
+        {
+            if (supplierProduct.Price != null && supplierProduct.Price < 0)
+            {
+                return new BadRequestObjectResult("Price cannot be negative");
+            }
+            return null;
         }
     }
 }

@@ -56,6 +56,12 @@ namespace J_A_Jewelry.Controllers
                 return BadRequest();
             }
 
+            var amountError = ValidateAmount(customerPayment);
+            if (amountError != null)
+            {
+                return amountError;
+            }
+
             _context.Entry(customerPayment).State = EntityState.Modified;
 
             try
@@ -82,6 +88,20 @@ namespace J_A_Jewelry.Controllers
         [HttpPost]
         public async Task<ActionResult<CustomerPayment>> PostCustomerPayment(CustomerPayment customerPayment)
         {
+            var amountError = ValidateAmount(customerPayment);
+            if (amountError != null)
+            {
+                return amountError;
+            }
+
+            // A payment is applied against the order's outstanding balance
+            // (computed at read time by the CustomerBalances report) — so an
+            // unusable amount here would corrupt that balance silently.
+            if (customerPayment.CustomerId == null && customerPayment.SalesOrderId == null)
+            {
+                return BadRequest("Payment must reference a customer or a sales order");
+            }
+
             _context.CustomerPayments.Add(customerPayment);
             await _context.SaveChangesAsync();
 
@@ -107,6 +127,15 @@ namespace J_A_Jewelry.Controllers
         private bool CustomerPaymentExists(int id)
         {
             return _context.CustomerPayments.Any(e => e.Id == id);
+        }
+
+        private static BadRequestObjectResult? ValidateAmount(CustomerPayment payment)
+        {
+            if (payment.Amount == null || payment.Amount <= 0)
+            {
+                return new BadRequestObjectResult("Payment amount must be greater than zero");
+            }
+            return null;
         }
     }
 }

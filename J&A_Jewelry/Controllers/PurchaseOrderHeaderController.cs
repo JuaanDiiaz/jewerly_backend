@@ -51,6 +51,12 @@ namespace J_A_Jewelry.Controllers
                 return BadRequest();
             }
 
+            var moneyError = ValidateTotal(purchaseOrderHeader);
+            if (moneyError != null)
+            {
+                return moneyError;
+            }
+
             _context.Entry(purchaseOrderHeader).State = EntityState.Modified;
 
             try
@@ -77,6 +83,12 @@ namespace J_A_Jewelry.Controllers
         [HttpPost]
         public async Task<ActionResult<PurchaseOrderHeader>> PostPurchaseOrderHeader(PurchaseOrderHeader purchaseOrderHeader)
         {
+            var moneyError = ValidateTotal(purchaseOrderHeader);
+            if (moneyError != null)
+            {
+                return moneyError;
+            }
+
             _context.PurchaseOrderHeaders.Add(purchaseOrderHeader);
             await _context.SaveChangesAsync();
 
@@ -104,6 +116,15 @@ namespace J_A_Jewelry.Controllers
             return _context.PurchaseOrderHeaders.Any(e => e.Id == id);
         }
 
+        private static BadRequestObjectResult? ValidateTotal(PurchaseOrderHeader header)
+        {
+            if ((header.Total ?? 0) < 0)
+            {
+                return new BadRequestObjectResult("Total cannot be negative");
+            }
+            return null;
+        }
+
         // POST: api/PurchaseOrderHeader/{id}/Complete
         [HttpPost("{id}/Complete")]
         public async Task<ActionResult<object>> CompletePurchaseOrder(int id, [FromBody] CompletePurchaseRequest request)
@@ -112,8 +133,18 @@ namespace J_A_Jewelry.Controllers
             if (header == null)
                 return NotFound("Purchase order not found");
 
+            // Readable fast path; the authoritative claim is the conditional
+            // UPDATE inside the transaction below.
             if (header.Status == "Completed")
                 return BadRequest("Purchase order is already completed");
+
+            // A receipt already logged for this order means its stock has been
+            // received once — regardless of the status string, completing
+            // again would hand the stock out twice.
+            var alreadyReceived = await _context.InventoryMovements
+                .AnyAsync(m => m.PurchaseOrderId == id);
+            if (alreadyReceived)
+                return BadRequest("Purchase order has already been received (an inventory movement exists for it)");
 
             // Validate warehouse exists
             var warehouse = await _context.Warehouses.FindAsync(request.WarehouseId);
@@ -127,6 +158,35 @@ namespace J_A_Jewelry.Controllers
 
             if (!details.Any())
                 return BadRequest("No items in this purchase order");
+
+            foreach (var detail in details)
+            {
+                if (detail.Quantity == null || detail.Quantity <= 0)
+                {
+                    return BadRequest($"Quantity for productId {detail.ProductId} in this order must be at least 1");
+                }
+            }
+
+            // Movements, stock updates, and the status change land together or
+            // not at all.
+            await using var transaction = await _context.Database.BeginTransactionAsync();
+
+            // Claim completion atomically: the UPDATE only matches rows still
+            // open, so two racing Complete calls for the same order cannot
+            // both pass the status check and double the stock.
+            var claimed = await _context.PurchaseOrderHeaders
+                .Where(h => h.Id == id && h.Status != "Completed")
+                .ExecuteUpdateAsync(s => s
+                    .SetProperty(h => h.Status, "Completed")
+                    .SetProperty(h => h.ReceptionDate, request.ReceptionDate ?? DateTime.Now));
+            if (claimed == 0)
+                return BadRequest("Purchase order is already completed");
+
+            // Refresh the local copy after the direct UPDATE for the response.
+            _context.Entry(header).State = EntityState.Detached;
+            header = await _context.PurchaseOrderHeaders
+                .AsNoTracking()
+                .FirstAsync(h => h.Id == id);
 
             // Create inventory movements and update quantities for each item
             var movements = new List<InventoryMovement>();
@@ -169,11 +229,13 @@ namespace J_A_Jewelry.Controllers
                 }
             }
 
-            // Update header status and reception date
+            // The detached copy is only the response payload — the status and
+            // reception date were already written by the claim above.
             header.Status = "Completed";
             header.ReceptionDate = request.ReceptionDate ?? DateTime.Now;
 
             await _context.SaveChangesAsync();
+            await transaction.CommitAsync();
 
             return Ok(new
             {

@@ -76,6 +76,12 @@ namespace J_A_Jewelry.Controllers
                 return BadRequest();
             }
 
+            var moneyError = ValidateHeaderMoney(salesOrderHeader);
+            if (moneyError != null)
+            {
+                return moneyError;
+            }
+
             _context.Entry(salesOrderHeader).State = EntityState.Modified;
 
             try
@@ -102,6 +108,12 @@ namespace J_A_Jewelry.Controllers
         [HttpPost]
         public async Task<ActionResult<SalesOrderHeader>> PostSalesOrderHeader(SalesOrderHeader salesOrderHeader)
         {
+            var moneyError = ValidateHeaderMoney(salesOrderHeader);
+            if (moneyError != null)
+            {
+                return moneyError;
+            }
+
             _context.SalesOrderHeaders.Add(salesOrderHeader);
             await _context.SaveChangesAsync();
 
@@ -129,10 +141,37 @@ namespace J_A_Jewelry.Controllers
             return _context.SalesOrderHeaders.Any(e => e.Id == id);
         }
 
+        /// <summary>
+        /// Rejects negative money on the raw CRUD endpoints. CompleteSale
+        /// recomputes these fields from the items; here the client values are
+        /// the only source, so at minimum they cannot go below zero.
+        /// </summary>
+        private static BadRequestObjectResult? ValidateHeaderMoney(SalesOrderHeader header)
+        {
+            if ((header.Subtotal ?? 0) < 0 || (header.TaxAmount ?? 0) < 0 || (header.Total ?? 0) < 0)
+            {
+                return new BadRequestObjectResult("Subtotal, taxAmount, and total cannot be negative");
+            }
+            return null;
+        }
+
         // POST: api/SalesOrderHeader/CompleteSale
         [HttpPost("CompleteSale")]
         public async Task<ActionResult<object>> CompleteSale([FromBody] CompleteSaleRequest request)
         {
+            // Structural validation before any lookups: the sale needs items,
+            // and every line must be a real purchase of goods.
+            if (request.Items == null || request.Items.Count == 0)
+                return BadRequest("At least one item is required");
+
+            foreach (var item in request.Items)
+            {
+                if (item.Quantity <= 0)
+                    return BadRequest($"Quantity for productId {item.ProductId} must be at least 1");
+                if (item.UnitPrice < 0)
+                    return BadRequest($"Unit price for productId {item.ProductId} cannot be negative");
+            }
+
             // Validate customer exists
             var customer = await _context.Customers.FindAsync(request.CustomerId);
             if (customer == null)
@@ -142,6 +181,14 @@ namespace J_A_Jewelry.Controllers
             var warehouse = await _context.Warehouses.FindAsync(request.WarehouseId);
             if (warehouse == null)
                 return BadRequest("Invalid warehouseId");
+
+            if (request.PaymentMethodId.HasValue)
+            {
+                var methodExists = await _context.PaymentMethods
+                    .AnyAsync(m => m.Id == request.PaymentMethodId.Value);
+                if (!methodExists)
+                    return BadRequest("Invalid paymentMethodId");
+            }
 
             // Validate all items have sufficient stock and calculate totals.
             // Pricing is IVA-exclusive: the posted unit price is pre-tax and
@@ -153,11 +200,32 @@ namespace J_A_Jewelry.Controllers
                 .Where(r => r.IsActive)
                 .ToListAsync();
             var requestedProductIds = request.Items.Select(i => i.ProductId).Distinct().ToList();
+            var productsExist = await _context.Products.CountAsync(p => requestedProductIds.Contains(p.Id));
+            if (productsExist != requestedProductIds.Count)
+                return BadRequest("Invalid productId in items");
             var productCategoryIds = await _context.ProductCategories
                 .Where(pc => pc.ProductId != null && requestedProductIds.Contains(pc.ProductId.Value))
                 .ToDictionaryAsync(pc => pc.Id, pc => new { pc.ProductId, pc.CategoryId });
 
             var defaultRate = activeRates.FirstOrDefault(r => r.CategoryId == null);
+
+            // Friendly pre-flight stock check with per-product demand totals
+            // (two lines for the same product count once here). This produces
+            // a readable error with the available count; the authoritative
+            // guard is the conditional UPDATE inside the transaction below,
+            // so two concurrent sales of the last unit cannot both succeed.
+            var demandByProduct = request.Items
+                .GroupBy(i => i.ProductId)
+                .ToDictionary(g => g.Key, g => g.Sum(i => i.Quantity));
+            var stockByProduct = await _context.Inventories
+                .Where(i => i.WarehouseId == request.WarehouseId && demandByProduct.Keys.Contains(i.ProductId!.Value))
+                .ToDictionaryAsync(i => i.ProductId!.Value, i => i.Quantity ?? 0);
+            foreach (var (productId, demand) in demandByProduct)
+            {
+                var available = stockByProduct.GetValueOrDefault(productId);
+                if (demand > available)
+                    return BadRequest($"Insufficient stock for productId {productId}. Available: {available}, Requested: {demand}");
+            }
 
             decimal subtotal = 0;
             decimal taxTotal = 0;
@@ -168,13 +236,6 @@ namespace J_A_Jewelry.Controllers
 
             foreach (var item in request.Items)
             {
-                var inventory = await _context.Inventories
-                    .FirstOrDefaultAsync(i => i.ProductId == item.ProductId && i.WarehouseId == request.WarehouseId);
-
-                int available = inventory?.Quantity ?? 0;
-                if (item.Quantity > available)
-                    return BadRequest($"Insufficient stock for productId {item.ProductId}. Available: {available}, Requested: {item.Quantity}");
-
                 var categoryIds = productCategoryIds.Values
                     .Where(pc => pc.ProductId == item.ProductId)
                     .Select(pc => pc.CategoryId)
@@ -208,8 +269,24 @@ namespace J_A_Jewelry.Controllers
                 PaymentMethodId = request.PaymentMethodId,
                 SalespersonName = request.SalespersonName
             };
+            // Everything below is one unit of work: if the stock reservation,
+            // the details, or the tax rows fail, the header is rolled back too.
+            await using var transaction = await _context.Database.BeginTransactionAsync();
+
             _context.SalesOrderHeaders.Add(header);
             await _context.SaveChangesAsync();
+
+            // Authoritative stock reservation: a conditional UPDATE only
+            // matches rows that still hold the units, so the oversell window
+            // between a check and the decrement is closed.
+            foreach (var (productId, demand) in demandByProduct)
+            {
+                var affected = await _context.Inventories
+                    .Where(i => i.ProductId == productId && i.WarehouseId == request.WarehouseId && (i.Quantity ?? 0) >= demand)
+                    .ExecuteUpdateAsync(s => s.SetProperty(i => i.Quantity, i => (i.Quantity ?? 0) - demand));
+                if (affected == 0)
+                    return BadRequest($"Insufficient stock for productId {productId}. Requested: {demand}");
+            }
 
             // Create details and inventory movements for each item
             var details = new List<SalesOrderDetail>();
@@ -242,18 +319,7 @@ namespace J_A_Jewelry.Controllers
                 };
                 _context.InventoryMovements.Add(movement);
                 movements.Add(movement);
-
-                // Update inventory quantity (this will also be done by PostInventoryMovement trigger, but we do it here for atomicity)
-                var inventory = await _context.Inventories
-                    .FirstOrDefaultAsync(i => i.ProductId == item.ProductId && i.WarehouseId == request.WarehouseId);
-                if (inventory != null)
-                {
-                    inventory.Quantity = (inventory.Quantity ?? 0) - item.Quantity;
-                    if (inventory.Quantity < 0) inventory.Quantity = 0;
-                }
             }
-
-            await _context.SaveChangesAsync();
 
             // Record the per-rate tax amounts in SalesTaxDetail — the rows the
             // Tax Totals report groups on.
@@ -266,7 +332,9 @@ namespace J_A_Jewelry.Controllers
                 })
                 .ToList();
             _context.SalesTaxDetails.AddRange(taxDetails);
+
             await _context.SaveChangesAsync();
+            await transaction.CommitAsync();
 
             return Ok(new
             {

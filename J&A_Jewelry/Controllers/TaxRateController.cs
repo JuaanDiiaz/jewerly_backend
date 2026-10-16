@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -59,7 +60,11 @@ namespace J_A_Jewelry.Controllers
 
             // Only one active rate per scope: saving an active rate for a
             // category (or as the default) deactivates the others in that
-            // same scope.
+            // same scope. Serializable isolation (plus the same rule inside
+            // PostTaxRate) makes the deactivate-and-save step atomic — two
+            // racing saves cannot both leave an active rate behind.
+            await using var transaction = await _context.Database.BeginTransactionAsync(IsolationLevel.Serializable);
+
             if (taxRate.IsActive)
             {
                 var others = await _context.TaxRates
@@ -73,6 +78,7 @@ namespace J_A_Jewelry.Controllers
             try
             {
                 await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -100,7 +106,10 @@ namespace J_A_Jewelry.Controllers
                 return validation;
             }
 
-            // Only one active rate per scope (see PutTaxRate).
+            // Only one active rate per scope (see PutTaxRate); serializable so
+            // deactivate-and-insert is atomic against racing saves.
+            await using var transaction = await _context.Database.BeginTransactionAsync(IsolationLevel.Serializable);
+
             if (taxRate.IsActive)
             {
                 var others = await _context.TaxRates
@@ -111,6 +120,7 @@ namespace J_A_Jewelry.Controllers
 
             _context.TaxRates.Add(taxRate);
             await _context.SaveChangesAsync();
+            await transaction.CommitAsync();
 
             return CreatedAtAction("GetTaxRate", new { id = taxRate.Id }, taxRate);
         }
