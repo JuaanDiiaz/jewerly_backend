@@ -653,6 +653,11 @@ namespace J_A_Jewelry.Migrations
                         .HasColumnType("date")
                         .HasColumnName("saleDate");
 
+                    b.Property<string>("SalespersonName")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("salespersonName");
+
                     b.Property<decimal?>("Total")
                         .HasPrecision(10, 2)
                         .HasColumnType("decimal(10,2)")

@@ -17,6 +17,13 @@ public partial class IsetechcJewelryInventoryContext
 {
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder)
     {
+        // salespersonName column added by the AddSalespersonName migration;
+        // checkout previously stored this value inside notes.
+        modelBuilder.Entity<SalesOrderHeader>()
+            .Property(e => e.SalespersonName)
+            .HasMaxLength(100)
+            .HasColumnName("salespersonName");
+
         ConfigureRelationships(modelBuilder);
         ConfigureSeedData(modelBuilder);
     }

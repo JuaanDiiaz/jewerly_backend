@@ -15,5 +15,7 @@ public partial class SalesOrderHeader
 
     public int? PaymentMethodId { get; set; }
 
+    public string? SalespersonName { get; set; }
+
     public string? Notes { get; set; }
 }
