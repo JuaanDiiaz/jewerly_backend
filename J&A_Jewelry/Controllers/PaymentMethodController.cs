@@ -1,16 +1,19 @@
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using J_A_Jewelry.Services.Identity;
 using J_A_Jewelry.Models;
 
 namespace J_A_Jewelry.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Policy = Permissions.AdminData)]
     public class PaymentMethodController : ControllerBase
     {
         private readonly IsetechcJewelryInventoryContext _context;

@@ -1,16 +1,19 @@
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using J_A_Jewelry.Models;
+using J_A_Jewelry.Services.Identity;
 
 namespace J_A_Jewelry.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class PurchaseOrderDetailController : ControllerBase
     {
         private readonly IsetechcJewelryInventoryContext _context;
@@ -49,6 +52,7 @@ namespace J_A_Jewelry.Controllers
         // PUT: api/PurchaseOrderDetail/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [Authorize(Policy = Permissions.Purchases)]
         public async Task<IActionResult> PutPurchaseOrderDetail(int id, PurchaseOrderDetail purchaseOrderDetail)
         {
             if (id != purchaseOrderDetail.Id)
@@ -89,6 +93,7 @@ namespace J_A_Jewelry.Controllers
         // POST: api/PurchaseOrderDetail
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize(Policy = Permissions.Purchases)]
         public async Task<ActionResult<PurchaseOrderDetail>> PostPurchaseOrderDetail(PurchaseOrderDetail purchaseOrderDetail)
         {
             var lineError = ValidateLine(purchaseOrderDetail);
@@ -108,6 +113,7 @@ namespace J_A_Jewelry.Controllers
 
         // DELETE: api/PurchaseOrderDetail/5
         [HttpDelete("{id}")]
+        [Authorize(Policy = Permissions.Purchases)]
         public async Task<IActionResult> DeletePurchaseOrderDetail(int id)
         {
             var purchaseOrderDetail = await _context.PurchaseOrderDetails.FindAsync(id);

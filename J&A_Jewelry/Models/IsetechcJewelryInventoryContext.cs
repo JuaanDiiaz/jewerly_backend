@@ -6,6 +6,12 @@ namespace J_A_Jewelry.Models;
 
 public partial class IsetechcJewelryInventoryContext : DbContext
 {
+    public virtual DbSet<AppUser> AppUsers { get; set; }
+
+    public virtual DbSet<AppRole> AppRoles { get; set; }
+
+    public virtual DbSet<AppUserRole> AppUserRoles { get; set; }
+
     public IsetechcJewelryInventoryContext()
     {
     }

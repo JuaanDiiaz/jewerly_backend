@@ -1,23 +1,29 @@
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using J_A_Jewelry.Models;
+using J_A_Jewelry.Services.Identity;
 
 namespace J_A_Jewelry.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class InventoryMovementController : ControllerBase
     {
         private readonly IsetechcJewelryInventoryContext _context;
+        private readonly Microsoft.Extensions.Logging.ILogger<InventoryMovementController> _logger;
 
-        public InventoryMovementController(IsetechcJewelryInventoryContext context)
+        public InventoryMovementController(IsetechcJewelryInventoryContext context,
+            Microsoft.Extensions.Logging.ILogger<InventoryMovementController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // GET: api/InventoryMovement?page=1&page_size=50&from_date&to_date&productId&warehouseId&movementType
@@ -78,6 +84,7 @@ namespace J_A_Jewelry.Controllers
         // PUT: api/InventoryMovement/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [Authorize(Policy = Permissions.Inventory)]
         public async Task<IActionResult> PutInventoryMovement(int id, InventoryMovement inventoryMovement)
         {
             if (id != inventoryMovement.Id)
@@ -109,6 +116,7 @@ namespace J_A_Jewelry.Controllers
         // POST: api/InventoryMovement
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize(Policy = Permissions.Inventory)]
         public async Task<ActionResult<InventoryMovement>> PostInventoryMovement(InventoryMovement inventoryMovement)
         {
             // Only typed, positive movements may touch stock. An unrecognized
@@ -177,6 +185,10 @@ namespace J_A_Jewelry.Controllers
                 // reason UpdateQuantity refuses below-zero results.
                 if (inventory.Quantity < 0)
                 {
+                    _logger.LogWarning(
+                        "Movement refused below-zero ProductId={ProductId} WarehouseId={WarehouseId} Type={Type} Quantity={Quantity} Current={Current}",
+                        inventoryMovement.ProductId, inventoryMovement.WarehouseId,
+                        type, inventoryMovement.Quantity, current);
                     return BadRequest(
                         $"Insufficient stock: {type} of {inventoryMovement.Quantity} for productId {inventoryMovement.ProductId} in warehouse {inventoryMovement.WarehouseId} would drop on-hand below zero (currently {current})");
                 }
@@ -186,11 +198,17 @@ namespace J_A_Jewelry.Controllers
             await _context.SaveChangesAsync();
             await transaction.CommitAsync();
 
+            _logger.LogInformation(
+                "Movement committed Id={Id} ProductId={ProductId} WarehouseId={WarehouseId} Type={Type} Quantity={Quantity} NewStock={NewStock}",
+                inventoryMovement.Id, inventoryMovement.ProductId, inventoryMovement.WarehouseId,
+                type, inventoryMovement.Quantity, inventory?.Quantity);
+
             return CreatedAtAction("GetInventoryMovement", new { id = inventoryMovement.Id }, inventoryMovement);
         }
 
         // DELETE: api/InventoryMovement/5
         [HttpDelete("{id}")]
+        [Authorize(Policy = Permissions.Inventory)]
         public async Task<IActionResult> DeleteInventoryMovement(int id)
         {
             var inventoryMovement = await _context.InventoryMovements.FindAsync(id);

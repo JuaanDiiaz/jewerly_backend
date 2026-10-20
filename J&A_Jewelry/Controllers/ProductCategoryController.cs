@@ -1,16 +1,19 @@
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using J_A_Jewelry.Models;
+using J_A_Jewelry.Services.Identity;
 
 namespace J_A_Jewelry.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ProductCategoryController : ControllerBase
     {
         private readonly IsetechcJewelryInventoryContext _context;
@@ -44,6 +47,7 @@ namespace J_A_Jewelry.Controllers
         // PUT: api/ProductCategory/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [Authorize(Policy = Permissions.Products)]
         public async Task<IActionResult> PutProductCategory(int id, ProductCategory productCategory)
         {
             if (id != productCategory.Id)
@@ -75,6 +79,7 @@ namespace J_A_Jewelry.Controllers
         // POST: api/ProductCategory
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize(Policy = Permissions.Products)]
         public async Task<ActionResult<ProductCategory>> PostProductCategory(ProductCategory productCategory)
         {
             _context.ProductCategories.Add(productCategory);
@@ -85,6 +90,7 @@ namespace J_A_Jewelry.Controllers
 
         // DELETE: api/ProductCategory/5
         [HttpDelete("{id}")]
+        [Authorize(Policy = Permissions.Products)]
         public async Task<IActionResult> DeleteProductCategory(int id)
         {
             var productCategory = await _context.ProductCategories.FindAsync(id);

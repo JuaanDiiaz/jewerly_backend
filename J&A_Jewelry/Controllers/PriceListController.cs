@@ -1,16 +1,19 @@
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using J_A_Jewelry.Models;
+using J_A_Jewelry.Services.Identity;
 
 namespace J_A_Jewelry.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class PriceListController : ControllerBase
     {
         private readonly IsetechcJewelryInventoryContext _context;
@@ -44,6 +47,7 @@ namespace J_A_Jewelry.Controllers
         // PUT: api/PriceList/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [Authorize(Policy = Permissions.Prices)]
         public async Task<IActionResult> PutPriceList(int id, PriceList priceList)
         {
             if (id != priceList.Id)
@@ -75,6 +79,7 @@ namespace J_A_Jewelry.Controllers
         // POST: api/PriceList
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize(Policy = Permissions.Prices)]
         public async Task<ActionResult<PriceList>> PostPriceList(PriceList priceList)
         {
             _context.PriceLists.Add(priceList);
@@ -85,6 +90,7 @@ namespace J_A_Jewelry.Controllers
 
         // DELETE: api/PriceList/5
         [HttpDelete("{id}")]
+        [Authorize(Policy = Permissions.Prices)]
         public async Task<IActionResult> DeletePriceList(int id)
         {
             var priceList = await _context.PriceLists.FindAsync(id);

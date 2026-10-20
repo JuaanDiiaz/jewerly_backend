@@ -1,23 +1,30 @@
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using J_A_Jewelry.Models;
+using J_A_Jewelry.Services.Identity;
 
 namespace J_A_Jewelry.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class SalesOrderHeaderController : ControllerBase
     {
         private readonly IsetechcJewelryInventoryContext _context;
+        private readonly Microsoft.Extensions.Logging.ILogger<SalesOrderHeaderController> _logger;
 
-        public SalesOrderHeaderController(IsetechcJewelryInventoryContext context)
+        public SalesOrderHeaderController(IsetechcJewelryInventoryContext context,
+            Microsoft.Extensions.Logging.ILogger<SalesOrderHeaderController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // GET: api/SalesOrderHeader?page=1&page_size=50&from_date&to_date
@@ -69,6 +76,7 @@ namespace J_A_Jewelry.Controllers
         // PUT: api/SalesOrderHeader/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [Authorize(Policy = Permissions.Sales)]
         public async Task<IActionResult> PutSalesOrderHeader(int id, SalesOrderHeader salesOrderHeader)
         {
             if (id != salesOrderHeader.Id)
@@ -106,6 +114,7 @@ namespace J_A_Jewelry.Controllers
         // POST: api/SalesOrderHeader
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize(Policy = Permissions.Sales)]
         public async Task<ActionResult<SalesOrderHeader>> PostSalesOrderHeader(SalesOrderHeader salesOrderHeader)
         {
             var moneyError = ValidateHeaderMoney(salesOrderHeader);
@@ -122,6 +131,7 @@ namespace J_A_Jewelry.Controllers
 
         // DELETE: api/SalesOrderHeader/5
         [HttpDelete("{id}")]
+        [Authorize(Policy = Permissions.Sales)]
         public async Task<IActionResult> DeleteSalesOrderHeader(int id)
         {
             var salesOrderHeader = await _context.SalesOrderHeaders.FindAsync(id);
@@ -157,6 +167,7 @@ namespace J_A_Jewelry.Controllers
 
         // POST: api/SalesOrderHeader/CompleteSale
         [HttpPost("CompleteSale")]
+        [Authorize(Policy = Permissions.Sales)]
         public async Task<ActionResult<object>> CompleteSale([FromBody] CompleteSaleRequest request)
         {
             // Structural validation before any lookups: the sale needs items,
@@ -258,7 +269,9 @@ namespace J_A_Jewelry.Controllers
 
             decimal total = subtotal + taxTotal;
 
-            // Create sales order header
+            // Create sales order header — the salesperson is the LOGGED-IN
+            // user, stamped from the JWT 'name' claim (client-supplied value
+            // is ignored; the register no longer hand-types a seller).
             var header = new SalesOrderHeader
             {
                 SaleDate = request.SaleDate ?? DateTime.Now,
@@ -267,7 +280,7 @@ namespace J_A_Jewelry.Controllers
                 TaxAmount = taxTotal,
                 Total = total,
                 PaymentMethodId = request.PaymentMethodId,
-                SalespersonName = request.SalespersonName
+                SalespersonName = User.FindFirstValue("name") ?? request.SalespersonName
             };
             // Everything below is one unit of work: if the stock reservation,
             // the details, or the tax rows fail, the header is rolled back too.
@@ -285,7 +298,12 @@ namespace J_A_Jewelry.Controllers
                     .Where(i => i.ProductId == productId && i.WarehouseId == request.WarehouseId && (i.Quantity ?? 0) >= demand)
                     .ExecuteUpdateAsync(s => s.SetProperty(i => i.Quantity, i => (i.Quantity ?? 0) - demand));
                 if (affected == 0)
+                {
+                    _logger.LogWarning(
+                        "CompleteSale stock reservation denied HeaderId={HeaderId} ProductId={ProductId} WarehouseId={WarehouseId} Requested={Requested}",
+                        header.Id, productId, request.WarehouseId, demand);
                     return BadRequest($"Insufficient stock for productId {productId}. Requested: {demand}");
+                }
             }
 
             // Create details and inventory movements for each item
@@ -315,7 +333,7 @@ namespace J_A_Jewelry.Controllers
                     Quantity = item.Quantity,
                     MovementDate = request.SaleDate ?? DateTime.Now,
                     SalesOrderId = header.Id,
-                    Notes = $"Sale by {request.SalespersonName}"
+                    Notes = $"Sale by {User.FindFirstValue("name") ?? request.SalespersonName}"
                 };
                 _context.InventoryMovements.Add(movement);
                 movements.Add(movement);
@@ -335,6 +353,11 @@ namespace J_A_Jewelry.Controllers
 
             await _context.SaveChangesAsync();
             await transaction.CommitAsync();
+
+            _logger.LogInformation(
+                "CompleteSale committed HeaderId={HeaderId} CustomerId={CustomerId} WarehouseId={WarehouseId} PaymentMethodId={PaymentMethodId} Lines={DetailCount} Subtotal={Subtotal} Tax={Tax} Total={Total}",
+                header.Id, request.CustomerId, request.WarehouseId, request.PaymentMethodId,
+                details.Count, subtotal, taxTotal, total);
 
             return Ok(new
             {

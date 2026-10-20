@@ -1,23 +1,29 @@
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using J_A_Jewelry.Models;
+using J_A_Jewelry.Services.Identity;
 
 namespace J_A_Jewelry.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class PurchaseOrderHeaderController : ControllerBase
     {
         private readonly IsetechcJewelryInventoryContext _context;
+        private readonly Microsoft.Extensions.Logging.ILogger<PurchaseOrderHeaderController> _logger;
 
-        public PurchaseOrderHeaderController(IsetechcJewelryInventoryContext context)
+        public PurchaseOrderHeaderController(IsetechcJewelryInventoryContext context,
+            Microsoft.Extensions.Logging.ILogger<PurchaseOrderHeaderController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // GET: api/PurchaseOrderHeader
@@ -44,6 +50,7 @@ namespace J_A_Jewelry.Controllers
         // PUT: api/PurchaseOrderHeader/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [Authorize(Policy = Permissions.Purchases)]
         public async Task<IActionResult> PutPurchaseOrderHeader(int id, PurchaseOrderHeader purchaseOrderHeader)
         {
             if (id != purchaseOrderHeader.Id)
@@ -81,6 +88,7 @@ namespace J_A_Jewelry.Controllers
         // POST: api/PurchaseOrderHeader
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize(Policy = Permissions.Purchases)]
         public async Task<ActionResult<PurchaseOrderHeader>> PostPurchaseOrderHeader(PurchaseOrderHeader purchaseOrderHeader)
         {
             var moneyError = ValidateTotal(purchaseOrderHeader);
@@ -97,6 +105,7 @@ namespace J_A_Jewelry.Controllers
 
         // DELETE: api/PurchaseOrderHeader/5
         [HttpDelete("{id}")]
+        [Authorize(Policy = Permissions.Purchases)]
         public async Task<IActionResult> DeletePurchaseOrderHeader(int id)
         {
             var purchaseOrderHeader = await _context.PurchaseOrderHeaders.FindAsync(id);
@@ -127,6 +136,7 @@ namespace J_A_Jewelry.Controllers
 
         // POST: api/PurchaseOrderHeader/{id}/Complete
         [HttpPost("{id}/Complete")]
+        [Authorize(Policy = Permissions.Purchases)]
         public async Task<ActionResult<object>> CompletePurchaseOrder(int id, [FromBody] CompletePurchaseRequest request)
         {
             var header = await _context.PurchaseOrderHeaders.FindAsync(id);
@@ -236,6 +246,10 @@ namespace J_A_Jewelry.Controllers
 
             await _context.SaveChangesAsync();
             await transaction.CommitAsync();
+
+            _logger.LogInformation(
+                "Purchase order completed Id={PurchaseOrderId} SupplierId={SupplierId} WarehouseId={WarehouseId} Lines={DetailCount}",
+                header.Id, header.SupplierId, request.WarehouseId, movements.Count);
 
             return Ok(new
             {

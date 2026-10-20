@@ -1,24 +1,30 @@
-using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+using System.Data;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using J_A_Jewelry.Services.Identity;
 using J_A_Jewelry.Models;
 
 namespace J_A_Jewelry.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Policy = Permissions.AdminData)]
     public class TaxRateController : ControllerBase
     {
         private readonly IsetechcJewelryInventoryContext _context;
+        private readonly Microsoft.Extensions.Logging.ILogger<TaxRateController> _logger;
 
-        public TaxRateController(IsetechcJewelryInventoryContext context)
+        public TaxRateController(IsetechcJewelryInventoryContext context,
+            Microsoft.Extensions.Logging.ILogger<TaxRateController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // GET: api/TaxRate
@@ -121,6 +127,10 @@ namespace J_A_Jewelry.Controllers
             _context.TaxRates.Add(taxRate);
             await _context.SaveChangesAsync();
             await transaction.CommitAsync();
+
+            _logger.LogInformation(
+                "TaxRate created Id={Id} CategoryId={CategoryId} Rate={Rate} Active={IsActive}",
+                taxRate.Id, taxRate.CategoryId, taxRate.Rate, taxRate.IsActive);
 
             return CreatedAtAction("GetTaxRate", new { id = taxRate.Id }, taxRate);
         }

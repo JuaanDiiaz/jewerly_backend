@@ -17,6 +17,15 @@ public partial class IsetechcJewelryInventoryContext
 {
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder)
     {
+        // Diagnostics LogEvents table — created and owned by the MySQL log
+        // sink (see Serilog/MySqlLogEventSink.cs), never by a migration: it
+        // must not show up in migration diffs or need a migration run in prod.
+        modelBuilder.Entity<LogEvent>().ToTable("LogEvents", t => t.ExcludeFromMigrations());
+        modelBuilder.Entity<LogEvent>().Property(e => e.TimeStamp).HasColumnType("datetime(3)");
+        modelBuilder.Entity<LogEvent>().Property(e => e.Properties).HasColumnType("json");
+        // No DbSet declaration: query with context.Set<LogEvent>() so a future
+        // scaffold/migration diff never churns on this read-only table.
+
         // salespersonName column added by the AddSalespersonName migration;
         // checkout previously stored this value inside notes.
         modelBuilder.Entity<SalesOrderHeader>()
@@ -30,6 +39,37 @@ public partial class IsetechcJewelryInventoryContext
 
     private static void ConfigureRelationships(ModelBuilder modelBuilder)
     {
+        // Identity (users/roles) — domain tables WITH a migration (unlike
+        // the diagnostics LogEvents table excluded below).
+        modelBuilder.Entity<AppUser>(entity =>
+        {
+            entity.HasIndex(e => e.Username).IsUnique();
+            entity.Property(e => e.Username).HasMaxLength(64);
+            entity.Property(e => e.DisplayName).HasMaxLength(100);
+            entity.Property(e => e.CreatedAtUtc).HasColumnType("datetime(6)");
+        });
+        modelBuilder.Entity<AppRole>(entity =>
+        {
+            entity.HasIndex(e => e.Name).IsUnique();
+            entity.Property(e => e.Name).HasMaxLength(64);
+            entity.Property(e => e.Permissions).HasMaxLength(1000);
+        });
+        // Many-to-many with an explicit join entity (composite key) — EF can't
+        // invent the skip navigation shape the API contract needs.
+        modelBuilder.Entity<AppUser>()
+            .HasMany(u => u.Roles)
+            .WithMany(r => r.Users)
+            .UsingEntity<AppUserRole>(
+                join => join.HasOne(row => row.Role)
+                    .WithMany()
+                    .HasForeignKey(row => row.RoleId)
+                    .OnDelete(DeleteBehavior.Cascade),
+                join => join.HasOne(row => row.User)
+                    .WithMany()
+                    .HasForeignKey(row => row.UserId)
+                    .OnDelete(DeleteBehavior.Cascade),
+                join => join.HasKey(row => new { row.UserId, row.RoleId }));
+
         // CustomerPayments
         modelBuilder.Entity<CustomerPayment>()
             .HasOne(cp => cp.Customer)

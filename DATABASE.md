@@ -65,6 +65,29 @@ re-baselined there once:
    server, then move the production connection string to environment
    variables there and replace the file value with a placeholder.
 
+## Identity (users / roles / login)
+
+- Tables: `Users` / `Roles` / `UserRoles` (migration `AddIdentityUsers` —
+  applied to LOCALHOST only); prod gets the same idempotent-script flow as
+  every other migration (`dotnet ef migrations script AddTaxRates
+  AddIdentityUsers --idempotent`, review, then run on the server).
+- **Secrets:** `Jwt:SigningKey` (user-secrets in dev; `Jwt__SigningKey` env
+  var in prod) — startup FAILS without it. `Seed:AdminPassword`
+  (`Seed__AdminPassword`) — set BEFORE first run on a fresh database; the
+  fallback is a documented default `admin123` for the bootstrap `admin`
+  account, which carries `MustChangePassword=true`. **Rotate the seed
+  password once logged in** (Settings > account > change password).
+- Rules that keep the system operable (enforced server-side, mirrored in
+  the Roles screen UI):
+  - the Administrator role keeps its `*` wildcard — it cannot be edited down;
+  - the last active administrator account cannot be deactivated;
+  - system roles cannot be deleted;
+  - users are deactivated, not deleted (sales reference `salespersonName`).
+- Adding a permission = one code in two lists that must stay in step:
+  `Services/Identity/Permissions.cs` (backend; policy is generated
+  automatically) and `lib/models/permissions.dart` (app; map the new code to
+  menu items). Never add it to only one side.
+
 ## CI
 
 `.github/workflows/db-check.yml` fails any push/PR where the model changed
