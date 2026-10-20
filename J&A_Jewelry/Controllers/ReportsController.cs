@@ -1,14 +1,17 @@
-using System;
-using System.Linq;
+﻿using System;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using J_A_Jewelry.Services.Identity;
 using J_A_Jewelry.Models;
 
 namespace J_A_Jewelry.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Policy = Permissions.Reports)]
     public class ReportsController : ControllerBase
     {
         private readonly IsetechcJewelryInventoryContext _context;
@@ -188,28 +191,56 @@ namespace J_A_Jewelry.Controllers
         public async Task<ActionResult<IEnumerable<CustomerBalanceRow>>> CustomerBalances(
             [FromQuery(Name = "only_with_balance")] bool onlyWithBalance = false)
         {
-            var salesSums = _context.SalesOrderHeaders.AsNoTracking()
+            // Single payment methods settle at the counter — the sale itself is
+            // the receipt — so those totals count as paid without a
+            // CustomerPayment row; only the instalment method (same three-way
+            // name match the client uses) leaves a balance carried by
+            // CustomerPayments.
+            var instalmentMethodIds = _context.PaymentMethods.AsNoTracking()
+                .Where(m => (m.Description ?? "").ToLower().Contains("multiple")
+                         || (m.Description ?? "").ToLower().Contains("varias")
+                         || (m.Description ?? "").ToLower().Contains("parcial"))
+                .Select(m => m.Id)
+                .ToList();
+
+            var salesSums = await _context.SalesOrderHeaders.AsNoTracking()
                 .GroupBy(h => h.CustomerId)
-                .Select(g => new { CustomerId = g.Key, Total = g.Sum(x => x.Total) });
+                .Select(g => new { CustomerId = g.Key, Total = g.Sum(x => x.Total) })
+                .ToListAsync();
 
-            var paymentSums = _context.CustomerPayments.AsNoTracking()
+            var settledSums = await _context.SalesOrderHeaders.AsNoTracking()
+                .Where(x => x.PaymentMethodId == null
+                            || !instalmentMethodIds.Contains(x.PaymentMethodId.Value))
+                .GroupBy(h => h.CustomerId)
+                .Select(g => new { CustomerId = g.Key, Total = g.Sum(x => x.Total) })
+                .ToListAsync();
+
+            var paymentSums = await _context.CustomerPayments.AsNoTracking()
                 .GroupBy(p => p.CustomerId)
-                .Select(g => new { CustomerId = g.Key, Total = g.Sum(x => x.Amount) });
+                .Select(g => new { CustomerId = g.Key, Total = g.Sum(x => x.Amount) })
+                .ToListAsync();
 
-            var rows = await (from c in _context.Customers.AsNoTracking()
-                              join s in salesSums on c.Id equals s.CustomerId into sg
-                              from s in sg.DefaultIfEmpty()
-                              join pa in paymentSums on c.Id equals pa.CustomerId into pg
-                              from pa in pg.DefaultIfEmpty()
-                              select new CustomerBalanceRow
-                              {
-                                  CustomerId = c.Id,
-                                  Name = c.Name ?? "",
-                                  TotalSales = s != null ? s.Total ?? 0 : 0,
-                                  TotalPaid = pa != null ? pa.Total ?? 0 : 0,
-                                  Outstanding = (s != null ? s.Total ?? 0 : 0) - (pa != null ? pa.Total ?? 0 : 0)
-                              })
-                             .ToListAsync();
+            var salesTotals = salesSums.ToDictionary(x => x.CustomerId, x => x.Total ?? 0m);
+            var settledTotals = settledSums.ToDictionary(x => x.CustomerId, x => x.Total ?? 0m);
+            var paymentTotals = paymentSums.ToDictionary(x => x.CustomerId, x => x.Total ?? 0m);
+
+            var rows = await _context.Customers.AsNoTracking()
+                .Select(c => new CustomerBalanceRow
+                {
+                    CustomerId = c.Id,
+                    Name = c.Name ?? "",
+                    TotalSales = 0m,
+                    TotalPaid = 0m,
+                    Outstanding = 0m
+                })
+                .ToListAsync();
+            foreach (var row in rows)
+            {
+                row.TotalSales = salesTotals.GetValueOrDefault(row.CustomerId);
+                row.TotalPaid = settledTotals.GetValueOrDefault(row.CustomerId)
+                              + paymentTotals.GetValueOrDefault(row.CustomerId);
+                row.Outstanding = row.TotalSales - row.TotalPaid;
+            }
 
             if (onlyWithBalance)
                 rows = rows.Where(r => r.Outstanding > 0.005m)

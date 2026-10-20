@@ -13,3 +13,7 @@ artifacts/
 appsettings.local.json
 # local DB dumps before applying migrations
 backups/
+
+# Log output (runtime artifacts, never app code)
+logs/
+db_backups/
